@@ -1,0 +1,28 @@
+.title{
+  text-decoration: underline;
+}
+h2 {
+    color: DodgerBlue;
+    padding: 40px;
+    font-family: Arial;
+    text-align: center;
+}
+.product_img{
+  width:260px;
+  height: 370px;
+}
+
+.product_img_div{
+  display: inline-table;
+}
+
+.product_list{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.box{
+   border: 1px solid;
+   margin: 20px;
+   cursor: pointer;
+}

@@ -1,0 +1,103 @@
+{
+	"info": {
+		"_postman_id": "3f51fed0-22b8-47b0-8012-c0d8f2059d80",
+		"name": "Berkadia",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get products",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-request-id",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"name\": \"HP5\",\"price\": 20001,\"prop1\":1}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3001/v1/products/1"
+			},
+			"response": []
+		},
+		{
+			"name": "Add product",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-request-id",
+						"type": "text",
+						"value": "2"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"name\": \"Lenovo\",\r\n        \"productType\": \"Latptop\",\r\n        \"productCategory\": \"Electronics\",\r\n        \"price\": 20000\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3001/v1/products"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete product",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-request-id",
+						"type": "text",
+						"value": "1"
+					}
+				],
+				"url": "http://localhost:3001/v1/products/2"
+			},
+			"response": []
+		},
+		{
+			"name": "Get product by id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-request-id",
+						"type": "text",
+						"value": "1"
+					}
+				],
+				"url": "http://localhost:3001/v1/products/1"
+			},
+			"response": []
+		},
+		{
+			"name": "Get all products",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-request-id",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": "http://localhost:3001/v1/products"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

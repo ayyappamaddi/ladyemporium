@@ -1,0 +1,12 @@
+.student-form {
+    border:1px solid;
+    background-color: #eee;
+}
+
+.student-form button{
+    background-color: red;
+}
+
+.app_text{
+    font-weight: bold;
+}
