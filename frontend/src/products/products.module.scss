@@ -22,7 +22,34 @@ h2 {
 }
 
 .box{
-   border: 1px solid;
-   margin: 20px;
-   cursor: pointer;
+    border: 1px solid #ccccccb5;
+    margin: 20px;
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 2px;
+}
+.product_label_name{
+  font-size: 16px;
+  line-height: 1.43;
+  letter-spacing: 0.23px;
+  color: #3f3f47;
+  padding-top: 8px;
+  font-weight: normal;
+  margin: 5px 5px 5px 0px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+}
+.product_label_price{
+  display: inline-block;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.43;
+    letter-spacing: 0.27px;
+    color: #202024;
+}
+
+@media only screen and (max-width: 600px) {
+    .product_img{
+       width: calc(100%);
+    } 
 }

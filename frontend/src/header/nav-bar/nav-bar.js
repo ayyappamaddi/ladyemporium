@@ -12,7 +12,8 @@ function a11yProps(index) {
   };
 }
 
-const routes = [{ path: '/sarees' }, { path: '/kids' }, { path: '/jewellery' }, { path: '/contactus' }, { path: '/track-order' }]
+const routes = [{ path: '/sarees' }, { path: '/track-order' }]
+// { path: '/kids' }, { path: '/jewellery' }, { path: '/contactus' }, { path: '/track-order' }
 
 export default function SimpleTabs() {
   const [value, setTabIndex] = React.useState(0);
@@ -27,7 +28,7 @@ export default function SimpleTabs() {
   const handleChange = (event, newValue) => {
     setTabIndex(newValue);
     history.push(routes[newValue].path);
-    // messageService.sendMessage('navigateRoute',routes[newValue]);
+
   };
 
   return (
@@ -35,9 +36,9 @@ export default function SimpleTabs() {
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
           <Tab label="Sarees" {...a11yProps(0)} />
-          <Tab label="kids" {...a11yProps(1)} />
+          {/* <Tab label="kids" {...a11yProps(1)} />
           <Tab label="Jewellery" {...a11yProps(2)} />
-          <Tab label="Contact US" {...a11yProps(3)} />
+          <Tab label="Contact US" {...a11yProps(3)} /> */}
           <Tab label="Track Order" {...a11yProps(4)} />
         </Tabs>
       </AppBar>

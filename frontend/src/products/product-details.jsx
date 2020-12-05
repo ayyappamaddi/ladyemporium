@@ -2,16 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import styles from './product-details.module.scss';
 import { selectProdut } from '../store/actions/productActions';
+import { Button, Input, InputLabel, FormControl, FormHelperText } from '@material-ui/core';
+
 // const routerParams = useParams();
 export class ProductDetailsComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedProduct: {},
-      productLoaded: false,
-      selectedAltImgPath: ''
+      showOrderForm: false,
+      selectedProduct: props.selectedProduct,
+      productLoaded: props.selectedProduct ? true : false,
+      orderForm: {},
+      selectedAltImgPath: props.selectedProduct && props.selectedProduct.productImages ? props.selectedProduct.productImages[0].path : ''
     }
-    this.onAltImgClick = this.onAltImgClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    // this.onAltImgClick = this.onAltImgClick.bind(this);
   };
   onAltImgClick(index) {
     this.setState((state) => ({
@@ -20,7 +25,20 @@ export class ProductDetailsComponent extends React.Component {
   }
   componentDidMount() {
     const { match: { params } } = this.props;
-    this.props.selectProdut(params);
+    if (!(this.props.selectProdut && this.props.selectProdut.price)) {
+      this.props.selectProdut(params);
+    }
+  }
+  placeOrder = (value) => {
+    this.setState((state) => ({
+      showOrderForm: value,
+      orderForm: { productId: state.selectedProduct.productId }
+    }));
+  }
+  handleChange(property, event) {
+    const orderForm = this.state.orderForm;
+    orderForm[property] = event.target ? event.target.value : event;
+    this.setState((state) => ({ orderForm }));
   }
   componentWillReceiveProps(props) {
     this.setState((state) => ({
@@ -30,10 +48,43 @@ export class ProductDetailsComponent extends React.Component {
     }));
   }
   render() {
+    let placeOrderHTML = '';
 
+    if (!this.state.showOrderForm) {
+      placeOrderHTML = <Button variant="contained" color="primary" onClick={() => this.placeOrder.bind(this)(true)} >Place Order</Button>
+    } else if (this.state.showOrderForm && !this.state.orderForm.confimed) {
+      placeOrderHTML = <div>
+        <FormControl className={styles.element_row}>
+          <InputLabel htmlFor="my-input">Mobile No</InputLabel>
+          <Input id="my-input" aria-describedby="my-helper-text" onChange={(event) => this.handleChange('mobile', event)} />
+          <FormHelperText id="my-helper-text">User Mobile no</FormHelperText>
+        </FormControl>
+        <FormControl className={styles.element_row}>
+          <InputLabel htmlFor="my-input">Delivery Adress</InputLabel>
+          <Input id="my-input" aria-describedby="my-helper-text" onChange={(event) => this.handleChange('address', event)} />
+          <FormHelperText id="my-helper-text">Shipping address</FormHelperText>
+        </FormControl>
+        <Button variant="contained" color="primary" onClick={() => this.placeOrder.bind(this)(false)}> Cancel</Button>
+        <Button variant="contained" color="primary" onClick={() => this.handleChange('confimed', true)}> Confirm And Pay</Button>
+      </div>
+      // <span className={styles.product_specs_label}> <b>Note:</b> Place an order by msg 7022336741 </span>
+    } else if (this.state.showOrderForm && this.state.orderForm.confimed) {
+      placeOrderHTML = <span className={styles.product_specs_label}>
+        <p>
+          At the movement we have not yet integrated with payment gate way, we are regretted for the inconvenience.
+        </p>
+        <p>
+          Nothing to worry you can still get it by making google pay or phone pay to the following phone number.
+        </p>
+        <p>
+          <b>Mobile No: 7022336741 </b>
+        </p>
+
+      </span>
+    }
     let productDetailsHTML;
     if (this.state.productLoaded) {
-      const alImages = this.state.selectedProduct.productImages;
+      const alImages = this.state.selectedProduct.productImages || [];
       productDetailsHTML = <div className={styles.produt_details_body}>
         <div className={styles.product_image}>
           <img className={styles.product_selected_image} src={this.state.selectedAltImgPath}></img>
@@ -43,11 +94,13 @@ export class ProductDetailsComponent extends React.Component {
             <span className={styles.product_specs_label}>{this.state.selectedProduct.name}</span>
             <span className={styles.product_specs_label}>{this.state.selectedProduct.description}</span>
             <span className={styles.product_specs_label}>{this.state.selectedProduct.cost}</span>
-            <span className={styles.product_specs_label}>Price : INR {this.state.selectedProduct.price}</span>
-            <span className={styles.product_specs_label}> <b>Note:</b> Place an order by msg 7022336741 </span>
+            <span className={styles.product_specs_label}> ₹  {this.state.selectedProduct.price}</span>
+            {placeOrderHTML}
           </div>
           <div className={styles.similar_products}>
-            {alImages.map((altImg, i) => <img onClick={() => this.onAltImgClick(i)} key={i} className={styles.product_alt_img_tile} src={altImg.path}></img>)}
+            <div className={styles.mobile_scroll_width}>
+              {alImages.map((altImg, i) => <img onClick={() => this.onAltImgClick.bind(this)(i)} key={i} className={styles.product_alt_img_tile} src={altImg.path}></img>)}
+            </div>
           </div>
         </div>
       </div>

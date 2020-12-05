@@ -1,4 +1,4 @@
-import { GET_PRODUCTS, POST_PRODUCT, SELECT_PRODUCTS } from '../types'
+import { GET_PRODUCTS, POST_PRODUCT, SELECT_PRODUCTS,DELETE_PRODUCT } from '../types'
 import axios from 'axios'
 import constants from '../../shared/constants'
 
@@ -6,16 +6,16 @@ export const selectProdut = (data: any) => async (dispatch: any, getState: any) 
     try {
         const state = getState();
         const avlProducts = state.products.products;
-        let selectedPoduct:any;
+        let selectedPoduct: any;
         if (avlProducts && avlProducts[data.productId]) {
             selectedPoduct = avlProducts[data.productId];
         } else {
             const res = await axios.get(`${constants.apiBasePath}/v1/products/${data.productId}`, { headers: { 'x-request-id': 1 } })
-            res.data.productImages.map((prodImage: any) => {
-                prodImage.path = constants.bucketURL + data.productId + '_' + prodImage.fileName;
-            });
             selectedPoduct = res.data;
         }
+        selectedPoduct.productImages.map((prodImage: any) => {
+            prodImage.path = constants.bucketURL + data.productId + '_' + prodImage.fileName;
+        });
 
         dispatch({
             type: SELECT_PRODUCTS,
@@ -26,6 +26,18 @@ export const selectProdut = (data: any) => async (dispatch: any, getState: any) 
         console.error('An Error occured while Selecting a product', data);
     }
 };
+
+export const deleteProduct = (productId:any) => async (dispatch: any) => {
+    try {
+        const res = await axios.get(`${constants.apiBasePath}/v1/products/${productId}`, { headers: { 'x-request-id': 1 } })
+        dispatch({
+            type: DELETE_PRODUCT,
+            payload: productId
+        })
+    } catch (err) {
+
+    }
+}
 
 export const getProduts = () => async (dispatch: any) => {
 
@@ -50,7 +62,6 @@ export const getProduts = () => async (dispatch: any) => {
             payload: console.log(e),
         })
     }
-
 }
 
 export const addProduct = (product: any) => async (dispatch: any) => {

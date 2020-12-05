@@ -32,7 +32,7 @@ class App extends React.Component<any, any> {
     this.setState(newState);
   }
   render() {
-    return (<div>
+    return (<div >
       <HeaderComponent></HeaderComponent>
       <Router>
         <SimpleTabs></SimpleTabs>

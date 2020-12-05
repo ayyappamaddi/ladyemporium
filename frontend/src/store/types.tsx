@@ -1,4 +1,5 @@
 export const POST_PRODUCT = 'POST_PRODUCT';
+export const DELETE_PRODUCT = 'DELETE_PRODUCT';
 export const GET_PRODUCTS = 'GET_PRODUCTS';
 export const SELECT_PRODUCTS = 'SELECT_PRODUCTS';
 

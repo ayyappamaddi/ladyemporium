@@ -1,12 +1,14 @@
 import React from 'react';
-import { connect, useStore, useSelector } from 'react-redux';
-import { getProduts } from '../store/actions/productActions';
+import { connect } from 'react-redux';
+import { getProduts, selectProdut, deleteProduct } from '../store/actions/productActions';
 import styles from './products.module.scss'
 import Button from '@material-ui/core/Button'
 import AddProduct from './add-product';
 import messageService from '../shared/message-service.js';
-import { useHistory, Link } from "react-router-dom";
-
+import DeleteIcon from '@material-ui/icons/Delete';
+import PancelIcon from '@material-ui/icons/Create';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 export class Products extends React.Component<any, any> {
   showProducts = false;
@@ -15,6 +17,7 @@ export class Products extends React.Component<any, any> {
     super(props);
     this.showHideProduct = this.showHideProduct.bind(this);
     this.onProductClick = this.onProductClick.bind(this);
+    this.handleProductEvents = this.handleProductEvents.bind(this);
     this.state = { showProducts: false };
     this.handleMsg()
   }
@@ -24,7 +27,6 @@ export class Products extends React.Component<any, any> {
     });
   }
   componentDidMount() {
-    console.log('it is from component did mount');
     this.props.getProduts()
   }
 
@@ -40,19 +42,26 @@ export class Products extends React.Component<any, any> {
 
   }
   onProductClick(productId: any) {
+    this.props.selectProdut({ productId });
     messageService.sendMessage('route_navigate', { path: '/sarees/' + productId })
   }
-  render() {
-    let { products } = this.props;
+  handleProductEvents(event: any,eventName:string, productId:any) {
+    event.stopPropagation();
+    event.preventDefault();
+    if(eventName === 'delete'){
+      this.props.deleteProduct(productId);
+    }
+  }
 
+  render() {
+    let { products, userRole } = this.props;
     if (!products) {
       products = []
     }
     let actionButton;
-    if (!this.state.showProducts) {
+    if (!this.state.showProducts && userRole === 'admin') {
       actionButton = <Button variant="contained" color="primary" onClick={() => this.showHideProduct(true)} >Add product</Button>
     }
-
 
     return (
       <div>
@@ -69,9 +78,16 @@ export class Products extends React.Component<any, any> {
               <div className={styles.product_img_div} >
                 <img className={styles.product_img} src={product.masterFilePath}></img>
               </div>
-              <div> product:<span>{product.name}</span></div>
-              <div>Price: <span>{product.price}</span></div>
-
+              <div className={styles.product_label_name}>{product.name}</div>
+              <div className={styles.product_label_price}>₹ {product.price}</div>
+              {userRole === 'admin' ?
+               <div>
+                 <PancelIcon  onClick={(event) => this.handleProductEvents(event,'edit' ,product.productId)}></PancelIcon>
+                 <DeleteIcon onClick={(event) => this.handleProductEvents(event,'delete' ,product.productId)}></DeleteIcon> 
+                 <VisibilityIcon onClick={(event) => this.handleProductEvents(event,'visible' ,product.productId)}></VisibilityIcon> 
+                 <VisibilityOffIcon onClick={(event) => this.handleProductEvents(event,'visibleOff' ,product.productId)}></VisibilityOffIcon> 
+              </div>
+               : <span></span>}
 
               {/* </Link> */}
               {/* <div>Colors: <span>{product.color}</span></div> */}
@@ -91,8 +107,8 @@ const mapStateToProps = (state: any) => {
   for (var key in state.products.products) {
     productsArray.push(state.products.products[key]);
   }
-  return { products: productsArray }
+  return { products: productsArray, userRole: state.user.role }
 }
 
 // export default Products
-export default connect(mapStateToProps, { getProduts })(Products)
+export default connect(mapStateToProps, { getProduts, selectProdut, deleteProduct })(Products)

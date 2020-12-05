@@ -1,4 +1,4 @@
-import { GET_PRODUCTS, POST_PRODUCT, SELECT_PRODUCTS } from '../types'
+import { GET_PRODUCTS, POST_PRODUCT, SELECT_PRODUCTS, DELETE_PRODUCT } from '../types'
 
 const initialState = {
     products: {},
@@ -22,7 +22,11 @@ export default function (state = initialState, action: any) {
                 ...state,
                 selectedProduct: action.payload
             }
+        case DELETE_PRODUCT:
+            const currentProducts:any = state.products;
 
+            delete currentProducts[action.payload];
+            return { ...state, products: currentProducts};
         case POST_PRODUCT:
             const a = {
                 ...state,

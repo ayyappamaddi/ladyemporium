@@ -2,6 +2,7 @@ import React from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import styles from './header.module.scss'
 import TitleBarComponent from "./title-bar/title-bar";
+import { connect } from "react-redux";
 // import SimpleTabs from './nav-bar/nav-bar.js';
 var Carousel = require('react-responsive-carousel').Carousel;
 
@@ -13,26 +14,31 @@ class HeaderComponent extends React.Component<any, any> {
     }
 
     render() {
-
-        return (<div>
-            <TitleBarComponent></TitleBarComponent>
-            <Carousel showThumbs={false} >
+        let carosalHTML;
+        if (!(this.props.selectedProduct && this.props.selectedProduct.name)) {
+            carosalHTML = <Carousel showThumbs={false} >
                 <div>
                     <img className={styles.carousel_image} src={require('../assets/images/carosal_saree1.jpg')}></img>
-                    <p className="legend">Legend 1</p>
                 </div>
                 <div>
                     <img className={styles.carousel_image} src={require('../assets/images/carosal_saree2.jpg')}></img>
-                    <p className="legend">Legend 2</p>
-                </div>
-                <div>
-                    <img className={styles.carousel_image} src={require('../assets/images/carosal_saree.jpg')}></img>
-                    <p className="legend">Legend 3</p>
                 </div>
             </Carousel>
-            
+        }else{
+            carosalHTML = '';
+        }
+        return (<div className={styles.header_content}>
+            <TitleBarComponent></TitleBarComponent>
+            {carosalHTML}
         </div>);
     }
 };
 
-export default HeaderComponent;
+
+
+const mapStateToProps = (state: any) => {
+    return { selectedProduct: state.products.selectedProduct }
+}
+
+export default connect(mapStateToProps, {})(HeaderComponent)
+// export default HeaderComponent

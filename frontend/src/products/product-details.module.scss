@@ -1,6 +1,6 @@
 .product_details_page{
     display: flex;
-    height: 400px;
+    height: 600px;
     margin-top: 40px; 
 
     .product_image{
@@ -44,3 +44,26 @@
     }
 
 }
+
+@media only screen and (max-width: 600px) {
+   .product_details_page{
+       height: 400px;
+       .produt_details_body{
+          display: block;
+       } 
+       .product_info, .product_image{
+           width: 100%;
+           margin-left: 0px;
+       }
+
+       .product_info {
+        overflow-x:auto;
+       }
+       .mobile_scroll_width{
+            max-width: 100%;
+            white-space: nowrap;
+        }
+   } 
+}
+
+
