@@ -11,7 +11,7 @@ const routes = {
     async twilioPostMsg(req, res) {
         try {
             logger.info("twilio::route::twilioPostMsg");
-            const context = req.userContext;
+            // const context = req.userContext;
             const newMsgBody = req.body;
             console.log('twilio msg body ', newMsgBody);
             response.success(res, {msg:'successfully received post msg'});
@@ -31,7 +31,7 @@ const routes = {
     }
 };
 
-router.get('/postmsg', catchAsync(routes.twilioGetMsg));
+router.get('/getmsg', catchAsync(routes.twilioGetMsg));
 router.post('/postmsg', catchAsync(routes.twilioPostMsg));
 
 module.exports = {

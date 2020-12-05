@@ -4,8 +4,8 @@ const productTypes: any = [
     { value: 'Kids', label: 'Kids' }
 
 ];
-const apiBasePath = 'http://localhost:3001';
-// const apiBasePath = 'http://52.208.209.4';
+// const apiBasePath = 'http://localhost:3001';
+const apiBasePath = 'http://52.208.209.4';
 const bucketURL = 'https://i-0d2da3be9c27bae0b.s3.amazonaws.com/'
 export default {
     productTypes,
