@@ -33,11 +33,12 @@ function noCacheMiddleware(req, res, next) {
 };
 
 function hasMinimumRequiredHeaders(req, res, next) {
-    if (req.headers[HEADERS.XREQUESTID]) {
-        next();
-    } else {
-        response.badRequest(res);
-    }
+    next();
+    // if (req.headers[HEADERS.XREQUESTID]) {
+    //     next();
+    // } else {
+    //     response.badRequest(res);
+    // }
 }
 
 function globalMiddleware() {
@@ -45,6 +46,11 @@ function globalMiddleware() {
     middlewareList.push(cors());
     // middlewareList.push(errorHandler);
     middlewareList.push(noCacheMiddleware);
+
+    middlewareList.push(bodyParser.urlencoded({
+        extended: true
+    }));
+    
     middlewareList.push(bodyParser.json());
     middlewareList.push(fileUpload({
         createParentPath: true

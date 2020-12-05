@@ -2,7 +2,6 @@ const ROUTE_URI = 'user';
 const express = require('express');
 const bcrypt = require ('bcrypt');
 const userModel = require('../models/user');
-const { prarameterValidator, bodyValidator } = require('../validators/product-validator');
 const logger = require('../../logger');
 const response = require('../../response');
 const { catchAsync } = require('../../middleware');
