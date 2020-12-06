@@ -80,6 +80,8 @@ export class Products extends React.Component<any, any> {
               </div>
               <div className={styles.product_label_name}>{product.name}</div>
               <div className={styles.product_label_price}>₹ {product.price}</div>
+              <div  onClick={() => this.onProductClick(product.productId)} className={styles.product_label_link}>Similar Products...</div>
+
               {userRole === 'admin' ?
                <div>
                  <PancelIcon  onClick={(event) => this.handleProductEvents(event,'edit' ,product.productId)}></PancelIcon>

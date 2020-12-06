@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import styles from './product-details.module.scss';
 import { selectProdut } from '../store/actions/productActions';
-import { Button, Input, InputLabel, FormControl, FormHelperText } from '@material-ui/core';
+import { Button, Input, InputLabel, FormControl, FormHelperText, TextareaAutosize } from '@material-ui/core';
 
 // const routerParams = useParams();
 export class ProductDetailsComponent extends React.Component {
@@ -58,10 +58,10 @@ export class ProductDetailsComponent extends React.Component {
           <InputLabel htmlFor="my-input">Mobile No</InputLabel>
           <Input id="my-input" aria-describedby="my-helper-text" onChange={(event) => this.handleChange('mobile', event)} />
           <FormHelperText id="my-helper-text">User Mobile no</FormHelperText>
-        </FormControl>
+        </FormControl><br/><br/>
         <FormControl className={styles.element_row}>
           <InputLabel htmlFor="my-input">Delivery Adress</InputLabel>
-          <Input id="my-input" aria-describedby="my-helper-text" onChange={(event) => this.handleChange('address', event)} />
+          <TextareaAutosize id="my-input" onChange={(event) => this.handleChange('address', event)} rowsMin={3} rowsMax={3} />
           <FormHelperText id="my-helper-text">Shipping address</FormHelperText>
         </FormControl>
         <div>
@@ -87,25 +87,28 @@ export class ProductDetailsComponent extends React.Component {
     let productDetailsHTML;
     if (this.state.productLoaded) {
       const alImages = this.state.selectedProduct.productImages || [];
-      productDetailsHTML = <div className={styles.produt_details_body}>
-        <div className={styles.product_specs_name}>{this.state.selectedProduct.name}</div>
-        <div className={styles.product_image}>
-          <img className={styles.product_selected_image} src={this.state.selectedAltImgPath}></img>
-        </div>
-        <div className={styles.product_info}>
-          <div className={styles.product_specs}>
-            <p> <b>Details: </b></p>
-            <p className={styles.product_specs_label}>{this.state.selectedProduct.description}</p>
-            <span className={styles.product_specs_label}>{this.state.selectedProduct.cost}</span>
-            <span className={styles.product_specs_label, styles.product_specs_price}> ₹  {this.state.selectedProduct.price} + Delivery changes(100Rs) </span>
-          {placeOrderHTML}
-        </div>
-        <div className={styles.similar_products}>
-          <div className={styles.mobile_scroll_width}>
-            {alImages.map((altImg, i) => <img onClick={() => this.onAltImgClick.bind(this)(i)} key={i} className={styles.product_alt_img_tile} src={altImg.path}></img>)}
+      productDetailsHTML =
+        <div>
+          <div className={styles.product_specs_name}>{this.state.selectedProduct.name}</div>
+          <div className={styles.produt_details_body}>
+            <div className={styles.product_image}>
+              <img className={styles.product_selected_image} src={this.state.selectedAltImgPath}></img>
+            </div>
+            <div className={styles.product_info}>
+              <div className={styles.product_specs}>
+                <p> <b>Details: </b></p>
+                <p className={styles.product_specs_label}>{this.state.selectedProduct.description}</p>
+                <span className={styles.product_specs_label}>{this.state.selectedProduct.cost}</span>
+                <span className={styles.product_specs_label, styles.product_specs_price}> ₹  {this.state.selectedProduct.price} + Delivery changes(100Rs) </span>
+              {placeOrderHTML}
+            </div>
+            <div className={styles.similar_products}>
+              <div className={styles.mobile_scroll_width}>
+                {alImages.map((altImg, i) => <img onClick={() => this.onAltImgClick.bind(this)(i)} key={i} className={styles.product_alt_img_tile} src={altImg.path}></img>)}
+              </div>
+            </div>
           </div>
         </div>
-        </div >
       </div >
     }
 

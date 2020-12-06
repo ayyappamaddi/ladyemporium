@@ -47,6 +47,14 @@ h2 {
     letter-spacing: 0.27px;
     color: #202024;
 }
+.product_label_link{
+  cursor: pointer;
+  font-weight: bold;
+  color: #304689;
+  &:hover{
+    text-decoration: underline;
+  }
+}
 
 @media only screen and (max-width: 600px) {
     .product_img{
