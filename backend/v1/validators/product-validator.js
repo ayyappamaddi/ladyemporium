@@ -12,6 +12,7 @@ const produtShema = Joi.object({
     price: Joi.number(),
     color: Joi.object(),
     description: Joi.string(),
+    visibility: Joi.boolean(),
     productImages:Joi.array()
 });
 

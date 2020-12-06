@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema({
     productId: Number,
     color: Object,
     description: String,
-    productImages: [{fileName:String}],
+    productImages: [{ fileName: String, visibility: Boolean, coverImg: Boolean, description: String }],
     isAvailable: Boolean,
 
 });

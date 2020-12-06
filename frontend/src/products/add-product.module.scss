@@ -4,20 +4,23 @@
         display: flex;
     }
     &_left_form{
-        width:50%;
+        width:30%;
         display: flex;
         flex-wrap: wrap;
         margin: 20px;
     }
     
     &_image_container{
-        width: 50%;
+        width: 40%;
         display: flex;
     }
-    .poduct_thumb_images{
-        width: 110px;
+    .selected_image_preview{
+        width: 30%;
     }
-    .poduct_file_tile, .poduct_img_tile{
+    .poduct_thumb_images{
+        width: 300px;
+    }
+    .poduct_file_tile{
         width: 100px;
         height: 100px;
         border:1px solid #ccc;
@@ -25,6 +28,15 @@
         cursor: pointer;
         margin: 0px 10px;
         display: block;
+    }
+    .poduct_img_tile{
+        width: 100px;
+        height: 100px;
+        border:1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 0px 10px;
+        display: inline-block;
     }
     .poduct_file_tile{
         border: 2px solid #ccc;
@@ -50,6 +62,9 @@
         margin-left: 20px;
         border-radius: 4px;
     }
+    .alt_poduct_img_row{
+        display: flex;
+    }
     .element_row_2{
         width: 50%;
     }
@@ -62,7 +77,13 @@
         .MuiFormControl-root{
             margin-right: 20px;
         }
+
+        .MuiSvgIcon-colorSecondary.cover_img_icon{ 
+            color: green;
+        }
         
     }
 
 }
+
+

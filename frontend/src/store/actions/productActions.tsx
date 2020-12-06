@@ -29,7 +29,7 @@ export const selectProdut = (data: any) => async (dispatch: any, getState: any) 
 
 export const deleteProduct = (productId:any) => async (dispatch: any) => {
     try {
-        const res = await axios.get(`${constants.apiBasePath}/v1/products/${productId}`, { headers: { 'x-request-id': 1 } })
+        const res = await axios.delete(`${constants.apiBasePath}/v1/products/${productId}`, { headers: { 'x-request-id': 1 } })
         dispatch({
             type: DELETE_PRODUCT,
             payload: productId
@@ -46,7 +46,14 @@ export const getProduts = () => async (dispatch: any) => {
         const productInfo: any = {};
         res.data.map((product: any) => {
             if (product.productImages && product.productImages.length) {
-                product.masterFilePath = constants.bucketURL + product.productId + '_' + product.productImages[0].fileName;
+                for(let i=0;i<product.productImages.length;i++   ){
+                    if(product.productImages[0].coverImg){
+                        product.masterFilePath = constants.bucketURL + product.productId + '_' + product.productImages[i].fileName;
+                    }
+                }
+                if(!product.masterFilePath){
+                    product.masterFilePath = constants.bucketURL + product.productId + '_' + product.productImages[0].fileName;
+                }
             }
             productInfo[product.productId] = product;
 
@@ -67,12 +74,18 @@ export const getProduts = () => async (dispatch: any) => {
 export const addProduct = (product: any) => async (dispatch: any) => {
     try {
         const productImages = product.alt_images;
+
         delete product.alt_images;
         delete product.displayColorPicker;
         delete product.selectedImgObj;
         product.productImages = [];
+        const productFiles = [];
         for (let i = 0; productImages && i < productImages.length; i++) {
-            product.productImages.push({ fileName: i + '_' + productImages[i].file.name });
+            productFiles.push(productImages[i]);
+            productImages[i].fileName = i + '_' + productImages[i].file.name;
+            delete productImages[i].file;
+            delete productImages[i].src;
+            product.productImages.push( productImages[i]);
         }
 
         const res = await axios.post(`${constants.apiBasePath}/v1/products`, product, { headers: { 'x-request-id': 1 } })
@@ -88,7 +101,7 @@ export const addProduct = (product: any) => async (dispatch: any) => {
             // const signedURL = signedURLINfo.data;
             for (let i = 0; i < product.productImages.length; i++) {
                 const signedURL = constants.bucketURL + productId + '_' + product.productImages[i].fileName;
-                await axios.put(signedURL, productImages[i].file);
+                await axios.put(signedURL, productFiles[i]);
             }
         }
 
