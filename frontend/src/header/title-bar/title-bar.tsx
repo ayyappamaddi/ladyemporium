@@ -32,17 +32,17 @@ class TitleBarComponent extends React.Component<any, any> {
             <div className={styles.page_title}>
                 <div className={styles.page_title_content}>
 
-
-                    <div className={styles.page_title_info}>
-                        <div className={styles.page_title_logo}>
-                            <img width="45px" src={require('../../assets/logo192.png')} />
+                    <a href="/">
+                        <div className={styles.page_title_info}>
+                            <div className={styles.page_title_logo}>
+                                <img width="45px" src={require('../../assets/logo192.png')} />
+                            </div>
+                            <div className={styles.page_title_labels}>
+                                <div className={styles.page_title_label}> Moksha Sri</div>
+                                <div className={styles.page_sub_title_label}> Collections</div>
+                            </div>
                         </div>
-                        <div className={styles.page_title_labels}>
-                            <div className={styles.page_title_label}> Moksha Sri</div>
-                            <div className={styles.page_sub_title_label}> Collections</div>
-                        </div>
-                    </div>
-
+                    </a>
                     <div className={styles.page_title_actions}>
                         <span>
                             <AccountCircleIcon></AccountCircleIcon>

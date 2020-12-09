@@ -27,14 +27,40 @@ const userSchema = new mongoose.Schema({
 });
 
 
+const ordersSchema = new mongoose.Schema({
+    orderId: Number,
+    shippingAddress: String,
+    orderImages: [String],
+    msgIds: [Number],
+    orderDate: Date,
+    orderStatus: String
+});
+
+
+const twilioMsgSchema = new mongoose.Schema({
+    msgId: Number,
+    messageSid: String,
+    msgBody: String,
+    msgFrom: String,
+    msgTo:String,
+    mediaUrl: String,
+    MediaContentType: String,
+    processed: Boolean
+});
+
+
 const counterSchema = new mongoose.Schema({
     productSeq: Number,
-    userSeq: Number
+    userSeq: Number,
+    twilioMsgSeq: Number,
+    orderSeq: Number
 });
 
 
 module.exports = {
     products: productSchema,
     counter: counterSchema,
-    user: userSchema
+    user: userSchema,
+    twilioMsg: twilioMsgSchema,
+    orders: ordersSchema
 }

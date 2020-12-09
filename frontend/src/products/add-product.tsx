@@ -61,7 +61,7 @@ export class AddProduct extends React.Component<any, any> {
       this.productAltImages[index].coverImg = value;
     } else if (property === 'visibility') {
       this.productAltImages[index].visibility = !!value;
-    }else if (property === 'description') {
+    } else if (property === 'description') {
       this.productAltImages[index].description = value;
     }
     this.updateState('alt_images', this.productAltImages);
@@ -81,7 +81,7 @@ export class AddProduct extends React.Component<any, any> {
   addProduct() {
     const newState: any = { ...this.state };
     this.props.addProduct(newState);
-    this.setState({...this.emptyState});
+    this.setState({ ...this.emptyState });
   }
 
   render() {
@@ -132,8 +132,8 @@ export class AddProduct extends React.Component<any, any> {
           </div>
 
           <FormControl className={styles.element_row}>
-            <InputLabel htmlFor="my-input">Product Description </InputLabel>
-            <TextareaAutosize id="my-input" aria-describedby="my-helper-text" onChange={(event) => this.handleChange('description', event)} rowsMin={3} rowsMax={3} />
+            {/* <InputLabel htmlFor="product-description">Product Description </InputLabel> */}
+            <TextareaAutosize id="product-description" aria-describedby="my-helper-text" onChange={(event) => this.handleChange('description', event)} rowsMin={3} rowsMax={3} />
             <FormHelperText id="my-helper-text">Detailed product description</FormHelperText>
           </FormControl>
         </div>
@@ -162,7 +162,7 @@ export class AddProduct extends React.Component<any, any> {
                   </div>
                   <FormControl className={styles.element_row}>
                     {/* <InputLabel htmlFor="my-input">Alt Product Description </InputLabel>   */}
-                    <TextareaAutosize id="my-input" onChange={(event) => this.handleAltImgActions(i, 'description', event.target.value)} rowsMin={3} rowsMax={3} />
+                    <TextareaAutosize id={'alt-img-description_' + i} onChange={(event) => this.handleAltImgActions(i, 'description', event.target.value)} rowsMin={3} rowsMax={3} />
                   </FormControl>
                 </div>
               </div>

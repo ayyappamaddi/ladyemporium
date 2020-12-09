@@ -12,7 +12,7 @@ function a11yProps(index) {
   };
 }
 
-const routes = [{ path: '/sarees' }, { path: '/track-order' }]
+const routes = [{ path: '/sarees' }, { path: '/orders' }]
 // { path: '/kids' }, { path: '/jewellery' }, { path: '/contactus' }, { path: '/track-order' }
 
 export default function SimpleTabs() {

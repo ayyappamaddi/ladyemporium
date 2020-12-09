@@ -1,0 +1,33 @@
+.order_img{
+    width: 100px;
+    height: 100px;
+}
+
+.shipping_addess_text{
+    height: 150px;
+    width: 150px;
+}
+
+.order_shipping_content{
+    display: flex;
+    width: 100%;
+    border: 1px solid;
+    flex-wrap: wrap;
+}
+.order_shipping_address{
+   
+    height: 200px;
+    border: 2px solid;
+    border-radius: 12px;
+    width: 45%;
+    margin-bottom: 50px;
+    padding: 10px;
+    &:nth-child(odd){
+        margin-right: 40px;
+    }
+    // &:nth-child(3n) {
+    //     page-break-after: always;
+    //     page-break-before: always;
+    //     background: red;
+    //     }
+}

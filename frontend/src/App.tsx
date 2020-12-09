@@ -6,6 +6,7 @@ import ColorContext from './colorContext';
 import HeaderComponent from './header/header';
 import KidsComponent from './products/kids/kids';
 import ProductDetailsComponent from './products/product-details';
+import Orders from './orders/orders'
 import SimpleTabs from './header/nav-bar/nav-bar.js'
 
 
@@ -42,6 +43,7 @@ class App extends React.Component<any, any> {
               <Redirect to="/sarees" />
             </Route>
             <Route exact path="/sarees" component={Products} />
+            <Route exact path="/orders" component={Orders} />
             <Route exact path="/sarees/:productId" component={ProductDetailsComponent} />
             <Route exact path="/kids" component={KidsComponent} />
           </Switch>

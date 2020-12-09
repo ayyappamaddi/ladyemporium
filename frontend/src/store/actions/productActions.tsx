@@ -81,7 +81,7 @@ export const addProduct = (product: any) => async (dispatch: any) => {
         product.productImages = [];
         const productFiles = [];
         for (let i = 0; productImages && i < productImages.length; i++) {
-            productFiles.push(productImages[i]);
+            productFiles.push(productImages[i].file);
             productImages[i].fileName = i + '_' + productImages[i].file.name;
             delete productImages[i].file;
             delete productImages[i].src;

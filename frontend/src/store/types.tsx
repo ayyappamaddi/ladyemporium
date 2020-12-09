@@ -9,3 +9,6 @@ export const ON_LOGIN_USER = 'ON_LOGIN_USER';
 export const LOGOUT_USER = 'LOGOUT_USER'
 export const CREATE_USER = 'CREATE_USER'
 
+
+// user actions
+export const ON_GET_ORDERS = 'GET_ORDERS';
