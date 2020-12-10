@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<script src="./JsBarcode.all.min.js"></script>
+	<script>
+		Number.prototype.pad = function(n) {
+			return new Array(n).join('0').slice((n || 2) * -1) + this;
+		}
+		$(document).ready(function () {
+			console.log("ready!");
+			getData();
+		});
+		function getData() {
+			const url = 'http://52.208.209.4/v1/orders';
+			// const url = 'http://localhost:3001/v1/orders'
+			$.get(url, function (r) {
+				const orderHtml = prepareShippingAddressHtml(r);
+				$("#orders_list").append(orderHtml);
+
+				for (let i = 0; i < r.length; i++) {
+					const orderId = r[i].orderId.pad(5);
+					JsBarcode("#barcode" + i, orderId);
+				}
+			});
+		}
+
+		function prepareShippingAddressHtml(r) {
+			orderHtml = '<div class="page_break">';
+			const pageBreakHtml = '</div ><div class="page_break">';
+			for (let i = 0; i < r.length; i++) {
+				orderHtml += '<div class="order_shipping_address"> <div>' + r[i].shippingAddress+'</div>';
+				orderHtml += '<div><img class="barcode_img" id="barcode' + i + '"/></div></div>';
+				if (i && (i+1) % 8 == 0)
+					orderHtml += '</div>' + pageBreakHtml;
+			}
+			return orderHtml + '</div>';
+		}
+	</script>
+	<style>
+		.order_shipping_content {
+			/* display: flex;
+			width: 100%;
+			flex-wrap: wrap; */
+		}
+		.barcode_img{
+			width: 100px;
+			height: 50px;
+		}
+
+		.order_shipping_address {
+			height: 200px;
+			border: 2px solid;
+			border-radius: 12px;
+			width: 45%;
+			margin-bottom: 50px;
+			padding: 10px;
+		}
+
+		.order_shipping_address:nth-child(odd){
+			margin-right: 20px;
+		}
+
+		.page_break {
+			display: flex;
+			width: 100%;
+			flex-wrap: wrap;
+			page-break-after: always;
+			/* width: 100%; */
+		}
+	</style>
+</head>
+
+
+<body>
+	<div id="orders_list" class="order_shipping_content">
+
+	</div>
+
+</body>
+
+</html>

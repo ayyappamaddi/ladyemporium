@@ -41,11 +41,13 @@ const routes = {
                 MediaContentType: newMsgBody.MediaContentType0,
                 processed: false
             }
-            if (newMsgBody.Body && newMsgBody.Body.includes(orderDelimeter)) {
-                await handleOrders(newMsgBody.Body);
-                twilioMsg.processed = true;
-            }
+
             twilioMsgModel.saveTwilioMsg(context, twilioMsg);
+            // if (newMsgBody.Body && newMsgBody.Body.includes(orderDelimeter)) {
+            await handleOrders(newMsgBody.Body);
+            // twilioMsg.processed = true;
+            // }
+            // twilioMsgModel.saveTwilioMsg(context, twilioMsg);
             response.success(res, { msg: 'successfully received twilio post msg' });
         } catch (err) {
             logger.error("Twilio::route::postMsg something went wrong", err.stack);
