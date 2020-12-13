@@ -12,7 +12,7 @@ function a11yProps(index) {
   };
 }
 
-const routes = [{ path: '/sarees' }, { path: '/orders' }]
+const routes = [{ path: '/sarees' }, { path: '/orders' }, { path: '/track_order' }]
 // { path: '/kids' }, { path: '/jewellery' }, { path: '/contactus' }, { path: '/track-order' }
 
 export default function SimpleTabs() {
@@ -39,7 +39,8 @@ export default function SimpleTabs() {
           {/* <Tab label="kids" {...a11yProps(1)} />
           <Tab label="Jewellery" {...a11yProps(2)} />
           <Tab label="Contact US" {...a11yProps(3)} /> */}
-          <Tab label="Track Order" {...a11yProps(4)} />
+          <Tab label="Order Mis" {...a11yProps(4)} />
+          <Tab label="Track Order" {...a11yProps(5)} />
         </Tabs>
       </AppBar>
     </div>

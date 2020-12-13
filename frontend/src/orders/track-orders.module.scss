@@ -1,0 +1,49 @@
+.track_orders_page{
+    margin-top:40px; 
+}
+.shipping_address_table{
+    height: 80%;
+}
+.shipping_actions_link{
+    cursor: pointer;
+    text-decoration: underline;
+    margin-right: 20px;
+}
+
+.shipping_row{
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+}
+.shipping_row_list{
+    height: 500px;
+    overflow-y: auto;
+}
+.row_header{
+    height: 50px;
+    width: 100%;
+    display: flex;
+    margin-top: 20px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+.column{
+    display: inline-block;
+}
+.column0{
+    width: 50px;
+}
+
+.column1{
+    width: 350px;
+}
+
+.column2{
+    width: 150px;
+    margin-left: 20px;
+}
+
+.column3{
+    width: 400px;
+    overflow-x: auto;
+}

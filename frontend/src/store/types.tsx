@@ -14,3 +14,4 @@ export const CREATE_USER = 'CREATE_USER'
 // user actions
 export const ON_GET_ORDERS = 'GET_ORDERS';
 export const ON_UPDATE_ORDERS = 'ON_UPDATE_ORDERS';
+export const ON_SEARCH_ORDERS = 'ON_SEARCH_ORDERS';

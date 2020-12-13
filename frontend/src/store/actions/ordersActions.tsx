@@ -1,11 +1,25 @@
-import { ON_GET_ORDERS, ON_UPDATE_ORDERS } from '../types'
+import { ON_GET_ORDERS, ON_UPDATE_ORDERS, ON_SEARCH_ORDERS } from '../types'
 import axios from 'axios'
 import constants from '../../shared/constants'
-import utilService from '../../shared/utils-service'
 import { async } from 'q';
 
+export const trackOder = (searchKey: string) => async (dispatch:any) => {
+    try {
+        const res = await axios.post(`${constants.apiBasePath}/v1/orders/search`, { searchTerm: searchKey }, { headers: { 'x-request-id': 1 } })
+        for (let i = 0; res.data && i < res.data.length; i++) {
+            const d = new Date(res.data[i].orderDate);
+            res.data[i].orderDateTime = `${d.getDate()}/${d.getMonth() + 1} ${d.getHours()}:${d.getMinutes()}`;
+        }
+        dispatch({
+            type: ON_SEARCH_ORDERS,
+            payload: res.data
+        })
 
-
+    } catch (e) {
+        console.error('An Error occured while user login', e);
+        throw e;
+    }
+}
 export const dispatchOrders = (ordersList: any) => async (dispatch: any) => {
     try {
         const res = await axios.put(`${constants.apiBasePath}/v1/orders`, ordersList, { headers: { 'x-request-id': 1 } })
@@ -39,11 +53,11 @@ export const printAndUpdateOrders = (ordersList: any) => async (dispatch: any) =
 export const getOrders = () => async (dispatch: any) => {
     try {
         const res = await axios.get(`${constants.apiBasePath}/v1/orders`, { headers: { 'x-request-id': 1 } })
-        for(let i=0;res.data && i<res.data.length;i++){
+        for (let i = 0; res.data && i < res.data.length; i++) {
             const d = new Date(res.data[i].orderDate);
-            res.data[i].orderDateTime= `${d.getDate()}/${d.getMonth()+1} ${d.getHours()}:${d.getMinutes()}`;
+            res.data[i].orderDateTime = `${d.getDate()}/${d.getMonth() + 1} ${d.getHours()}:${d.getMinutes()}`;
         }
-        
+
         dispatch({
             type: ON_GET_ORDERS,
             payload: res.data

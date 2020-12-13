@@ -6,9 +6,6 @@ import styles from './orders.module.scss'
 import cx from 'classnames'
 import { Button, Checkbox } from '@material-ui/core';
 
-import messageService from '../shared/message-service.js';
-import { style } from '@material-ui/system';
-
 export class Orders extends React.Component {
     shippingAddressList = [];
 

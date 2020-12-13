@@ -7,6 +7,7 @@ import HeaderComponent from './header/header';
 import KidsComponent from './products/kids/kids';
 import ProductDetailsComponent from './products/product-details';
 import Orders from './orders/orders'
+import TrackOrders from './orders/track-orders'
 import SimpleTabs from './header/nav-bar/nav-bar.js'
 
 
@@ -44,6 +45,7 @@ class App extends React.Component<any, any> {
             </Route>
             <Route exact path="/sarees" component={Products} />
             <Route exact path="/orders" component={Orders} />
+            <Route exact path="/track_order" component={TrackOrders} />
             <Route exact path="/sarees/:productId" component={ProductDetailsComponent} />
             <Route exact path="/kids" component={KidsComponent} />
           </Switch>

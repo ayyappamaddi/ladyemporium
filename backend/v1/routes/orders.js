@@ -11,10 +11,10 @@ const routes = {
         try {
             logger.info("order::route::getOrders");
             const query = {};
-            if(req.query && req.query['orderIds']){
+            if (req.query && req.query['orderIds']) {
                 const orderIds = req.query['orderIds'];
-                query.orderId = {$in:orderIds.split(',')};
-               }
+                query.orderId = { $in: orderIds.split(',') };
+            }
             const ordersList = await ordersModel.getOrders(query);
             response.success(res, ordersList);
         } catch (err) {
@@ -46,6 +46,18 @@ const routes = {
             response.serverError(res);
         }
     },
+    async searchOrders(req, res) {
+        try {
+            logger.info("order::route::searchOrders");
+            const searchObj = req.body;
+            logger.info("order::route::searchOrders get products for given srach params", searchObj);
+            const filterdOrders = await ordersModel.searchOrder(searchObj);
+            response.success(res, filterdOrders);
+        } catch (err) {
+            logger.error("order::route::deleteOrder something went wrong", err.stack);
+            response.serverError(res);
+        }
+    },
     async deleteOrder(req, res) {
         try {
             logger.info("order::route::deleteOrder");
@@ -60,6 +72,7 @@ const routes = {
 };
 
 router.get('/', catchAsync(routes.getOrders));
+router.post('/search', catchAsync(routes.searchOrders));
 router.put('/', catchAsync(routes.updateOrderList));
 router.put('/:orderId', catchAsync(routes.updateOrder));
 router.delete('/:orderId', catchAsync(routes.deleteOrder));
