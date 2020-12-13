@@ -7,16 +7,28 @@
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<script src="./JsBarcode.all.min.js"></script>
 	<script>
-		Number.prototype.pad = function(n) {
+		const pageSize = 4;
+		Number.prototype.pad = function (n) {
 			return new Array(n).join('0').slice((n || 2) * -1) + this;
 		}
 		$(document).ready(function () {
 			console.log("ready!");
-			getData();
+			const orderIds = getParameterValues('orders');
+			getData(orderIds);
 		});
-		function getData() {
-			const url = 'http://52.208.209.4/v1/orders';
-			// const url = 'http://localhost:3001/v1/orders'
+
+		function getParameterValues(param) {
+			var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+			for (var i = 0; i < url.length; i++) {
+				var urlparam = url[i].split('=');
+				if (urlparam[0] === param) {
+					return urlparam[1];
+				}
+			}
+		}
+		function getData(orderIds) {
+			// const url = 'http://52.208.209.4/v1/orders';
+			const url = 'http://localhost:3001/v1/orders?orderIds=' + orderIds;
 			$.get(url, function (r) {
 				const orderHtml = prepareShippingAddressHtml(r);
 				$("#orders_list").append(orderHtml);
@@ -32,9 +44,9 @@
 			orderHtml = '<div class="page_break">';
 			const pageBreakHtml = '</div ><div class="page_break">';
 			for (let i = 0; i < r.length; i++) {
-				orderHtml += '<div class="order_shipping_address"> <div>' + r[i].shippingAddress+'</div>';
+				orderHtml += '<div class="order_shipping_address"> <div>' + r[i].shippingAddress + '</div>';
 				orderHtml += '<div><img class="barcode_img" id="barcode' + i + '"/></div></div>';
-				if (i && (i+1) % 8 == 0)
+				if (i && (i + 1) % pageSize == 0)
 					orderHtml += '</div>' + pageBreakHtml;
 			}
 			return orderHtml + '</div>';
@@ -46,21 +58,22 @@
 			width: 100%;
 			flex-wrap: wrap; */
 		}
-		.barcode_img{
+
+		.barcode_img {
 			width: 100px;
 			height: 50px;
 		}
 
 		.order_shipping_address {
-			height: 200px;
+			min-height: 300px;
 			border: 2px solid;
 			border-radius: 12px;
 			width: 45%;
-			margin-bottom: 50px;
+			margin-bottom: 100px;
 			padding: 10px;
 		}
 
-		.order_shipping_address:nth-child(odd){
+		.order_shipping_address:nth-child(odd) {
 			margin-right: 20px;
 		}
 
@@ -69,7 +82,6 @@
 			width: 100%;
 			flex-wrap: wrap;
 			page-break-after: always;
-			/* width: 100%; */
 		}
 	</style>
 </head>
@@ -77,9 +89,7 @@
 
 <body>
 	<div id="orders_list" class="order_shipping_content">
-
 	</div>
-
 </body>
 
 </html>

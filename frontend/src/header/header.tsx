@@ -15,7 +15,7 @@ class HeaderComponent extends React.Component<any, any> {
 
     render() {
         let carosalHTML;
-        if (!(this.props.selectedProduct && this.props.selectedProduct.name)) {
+        if (!(this.props.selectedProduct && this.props.selectedProduct.name) && (this.props.userRole !== 'admin')) {
             carosalHTML = <Carousel showThumbs={false} >
                 <div>
                     <img className={styles.carousel_image} src={require('../assets/images/carosal_saree1.jpg')}></img>
@@ -24,7 +24,7 @@ class HeaderComponent extends React.Component<any, any> {
                     <img className={styles.carousel_image} src={require('../assets/images/carosal_saree2.jpg')}></img>
                 </div>
             </Carousel>
-        }else{
+        } else {
             carosalHTML = '';
         }
         return (<div className={styles.header_content}>
@@ -37,8 +37,7 @@ class HeaderComponent extends React.Component<any, any> {
 
 
 const mapStateToProps = (state: any) => {
-    return { selectedProduct: state.products.selectedProduct }
+    return { selectedProduct: state.products.selectedProduct, userRole: state.user.role }
 }
-
 export default connect(mapStateToProps, {})(HeaderComponent)
-// export default HeaderComponent
+

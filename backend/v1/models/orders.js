@@ -17,8 +17,8 @@ ordersSchema.pre('save', preSaveHook);
 
 async function getOrders(query = {}) {
     try {
-        const twilioModel = getModel('orders');
-        return twilioModel.find({ }, { _id: 0, __v: 0 });
+        const ordersModel = getModel('orders');
+        return ordersModel.find(query, { _id: 0, __v: 0 }).sort({orderId:-1});
 
     } catch (err) {
         logger.error('twilio::model getTwilioMsgs  Error occured while getting the twiliomsg', err.stack)
@@ -44,13 +44,23 @@ async function saveOrder(order) {
         throw err;
     }
 }
+async function updateOrder(order) {
+    try {
+        const ordersModel = getModel('orders');
+        return ordersModel.updateOne({orderId:order.orderId},{ $set: order })
+    } catch (err) {
+        logger.error('order::model updateOrder  Error occured while updating the order', err.stack)
+        throw err;
+    }
+}
 
-async function deleteOrder( orderId) {
+async function deleteOrder(orderId) {
     const ordersModel = getModel('orders');
     return ordersModel.findOneAndDelete({ orderId });
 }
 module.exports = {
     saveOrder,
     getOrders,
-    deleteOrder
+    deleteOrder,
+    updateOrder
 }

@@ -3,6 +3,10 @@
     height: 600px;
     margin-top: 40px; 
 
+   
+    .product_selected_image_container{
+        width: 100%;
+    }
     .product_specs_name{
         font-weight: bold;
         font-size: 18px;
@@ -30,10 +34,15 @@
             .product_specs_label{
                 display: block;
             }
+            .product_copy_link,
             .product_specs_price{
                 font-weight: bold;
                 margin-bottom: 10px;
                 display: inline-block;
+                width: 100%;
+            }
+            .product_copy_link{
+                cursor: pointer;
             }
         }
         .similar_products{

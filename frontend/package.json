@@ -17,6 +17,7 @@
     "@types/react-router-dom": "^5.1.6",
     "@types/react-slick": "^0.23.4",
     "axios": "^0.21.0",
+    "classnames": "^2.2.6",
     "contentful": "^7.14.8",
     "moment-timezone": "^0.5.31",
     "react": "^16.13.1",

@@ -1,6 +1,7 @@
-import { GET_PRODUCTS, POST_PRODUCT, SELECT_PRODUCTS,DELETE_PRODUCT } from '../types'
+import { GET_PRODUCTS, POST_PRODUCT, SELECT_PRODUCTS, DELETE_PRODUCT, UPDATE_PRODUCT } from '../types'
 import axios from 'axios'
 import constants from '../../shared/constants'
+import { async } from 'q';
 
 export const selectProdut = (data: any) => async (dispatch: any, getState: any) => {
     try {
@@ -27,15 +28,29 @@ export const selectProdut = (data: any) => async (dispatch: any, getState: any) 
     }
 };
 
-export const deleteProduct = (productId:any) => async (dispatch: any) => {
+export const deleteProduct = (productId: any) => async (dispatch: any) => {
     try {
         const res = await axios.delete(`${constants.apiBasePath}/v1/products/${productId}`, { headers: { 'x-request-id': 1 } })
         dispatch({
             type: DELETE_PRODUCT,
-            payload: productId
+            payload: res
         })
     } catch (err) {
+        console.error('An error occured while deleting a product', err);
+        throw err;
+    }
+}
+export const updateProduct = (productId: any, data: any) => async (dispatch: any) => {
+    try {
+        const res = await axios.put(`${constants.apiBasePath}/v1/products/${productId}`, data, { headers: { 'x-request-id': 1 } })
+        dispatch({
+            type: UPDATE_PRODUCT,
+            payload: {productId:res}
+        })
 
+    } catch (err) {
+        console.error('An error occured while updating a product', err);
+        throw err;
     }
 }
 
@@ -46,12 +61,12 @@ export const getProduts = () => async (dispatch: any) => {
         const productInfo: any = {};
         res.data.map((product: any) => {
             if (product.productImages && product.productImages.length) {
-                for(let i=0;i<product.productImages.length;i++   ){
-                    if(product.productImages[0].coverImg){
+                for (let i = 0; i < product.productImages.length; i++) {
+                    if (product.productImages[0].coverImg) {
                         product.masterFilePath = constants.bucketURL + product.productId + '_' + product.productImages[i].fileName;
                     }
                 }
-                if(!product.masterFilePath){
+                if (!product.masterFilePath) {
                     product.masterFilePath = constants.bucketURL + product.productId + '_' + product.productImages[0].fileName;
                 }
             }
@@ -85,7 +100,7 @@ export const addProduct = (product: any) => async (dispatch: any) => {
             productImages[i].fileName = i + '_' + productImages[i].file.name;
             delete productImages[i].file;
             delete productImages[i].src;
-            product.productImages.push( productImages[i]);
+            product.productImages.push(productImages[i]);
         }
 
         const res = await axios.post(`${constants.apiBasePath}/v1/products`, product, { headers: { 'x-request-id': 1 } })
@@ -107,7 +122,7 @@ export const addProduct = (product: any) => async (dispatch: any) => {
 
         dispatch({
             type: POST_PRODUCT,
-            payload: product
+            payload: {productId:res}
         })
 
     } catch (e) {

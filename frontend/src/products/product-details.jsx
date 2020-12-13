@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import styles from './product-details.module.scss';
 import { selectProdut } from '../store/actions/productActions';
 import { Button, Input, InputLabel, FormControl, FormHelperText, TextareaAutosize } from '@material-ui/core';
+import ShareIcon from '@material-ui/icons/Share';
 
 // const routerParams = useParams();
 export class ProductDetailsComponent extends React.Component {
@@ -49,7 +50,7 @@ export class ProductDetailsComponent extends React.Component {
   }
   render() {
     let placeOrderHTML = '';
-
+    let pageLocation = window.location.href;
     if (!this.state.showOrderForm) {
       placeOrderHTML = <div><Button variant="contained" color="primary" onClick={() => this.placeOrder.bind(this)(true)} >Place Order</Button></div>
     } else if (this.state.showOrderForm && !this.state.orderForm.confimed) {
@@ -58,7 +59,7 @@ export class ProductDetailsComponent extends React.Component {
           <InputLabel htmlFor="my-input">Mobile No</InputLabel>
           <Input id="my-input" aria-describedby="my-helper-text" onChange={(event) => this.handleChange('mobile', event)} />
           <FormHelperText id="my-helper-text">User Mobile no</FormHelperText>
-        </FormControl><br/><br/>
+        </FormControl><br /><br />
         <FormControl className={styles.element_row}>
           <InputLabel htmlFor="my-input">Delivery Adress</InputLabel>
           <TextareaAutosize id="my-input" onChange={(event) => this.handleChange('address', event)} rowsMin={3} rowsMax={3} />
@@ -79,7 +80,7 @@ export class ProductDetailsComponent extends React.Component {
           Nothing to worry you can still get it by making google pay or phone pay to the following phone number.
         </p>
         <p>
-          <b>Mobile No: 7022336741 </b>
+          <b>Whats app no: 7022336741 </b>
         </p>
 
       </span>
@@ -88,7 +89,7 @@ export class ProductDetailsComponent extends React.Component {
     if (this.state.productLoaded) {
       const alImages = this.state.selectedProduct.productImages || [];
       productDetailsHTML =
-        <div>
+        <div className={styles.product_selected_image_container}>
           <div className={styles.product_specs_name}>{this.state.selectedProduct.name}</div>
           <div className={styles.produt_details_body}>
             <div className={styles.product_image}>
@@ -100,15 +101,19 @@ export class ProductDetailsComponent extends React.Component {
                 <p className={styles.product_specs_label}>{this.state.selectedProduct.description}</p>
                 <span className={styles.product_specs_label}>{this.state.selectedProduct.cost}</span>
                 <span className={styles.product_specs_label, styles.product_specs_price}> ₹  {this.state.selectedProduct.price} + Delivery changes(100Rs) </span>
-              {placeOrderHTML}
-            </div>
-            <div className={styles.similar_products}>
-              <div className={styles.mobile_scroll_width}>
-                {alImages.map((altImg, i) => <img onClick={() => this.onAltImgClick.bind(this)(i)} key={i} className={styles.product_alt_img_tile} src={altImg.path}></img>)}
-              </div>
+
+              <div onClick={() => navigator.clipboard.writeText(pageLocation)} className={styles.product_specs_label, styles.product_copy_link} ><ShareIcon></ShareIcon>Share link</div>
+
+            {placeOrderHTML}
+          </div>
+          <div className={styles.similar_products}>
+            <div><b>Similar product with different color &amp; design</b></div>
+            <div className={styles.mobile_scroll_width}>
+              {alImages.map((altImg, i) => <img onClick={() => this.onAltImgClick.bind(this)(i)} key={i} className={styles.product_alt_img_tile} src={altImg.path}></img>)}
             </div>
           </div>
         </div>
+        </div >
       </div >
     }
 

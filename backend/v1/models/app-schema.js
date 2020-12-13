@@ -9,7 +9,9 @@ const productSchema = new mongoose.Schema({
     description: String,
     productImages: [{ fileName: String, visibility: Boolean, coverImg: Boolean, description: String }],
     isAvailable: Boolean,
-
+    origin: String,
+    creationDate: Date,
+    updatedTimeStamp:Date
 });
 
 const userSchema = new mongoose.Schema({

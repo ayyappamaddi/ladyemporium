@@ -1,6 +1,6 @@
-import { ON_GET_ORDERS } from '../types'
+import { ON_GET_ORDERS, ON_UPDATE_ORDERS } from '../types'
 
-const initialState = {
+const initialState:any = {
     orders: []
 }
 
@@ -13,7 +13,18 @@ export default function (state = initialState, action: any) {
                 ...state,
                 orders: [...action.payload],
             }
-
+        case ON_UPDATE_ORDERS:
+            const orders = state.orders;
+            const updatedOrders = action.payload;
+            for(let i=0;i<updatedOrders.length;i++){
+                for(let j=0;j<orders.length;j++){
+                    if(updatedOrders[i].orderId === orders[j].orderId){
+                        orders[j] = {...orders[j], ...updatedOrders[i]};
+                    }
+                }
+            }
+            return {...state, orders}
+            break;
         default: return state
     }
 

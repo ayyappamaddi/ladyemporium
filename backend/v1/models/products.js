@@ -17,13 +17,14 @@ productSchema.pre('save', preSaveHook);
 
 async function getProducts() {
     const productModel = getModel('products');
-    return productModel.find({}, { _id: 0, __v: 0 });
+    return productModel.find({}, { _id: 0, __v: 0 }).sort( { productId: -1 } )
 }
 
 async function saveProduct(context, product) {
     try {
         logger.info("product::model::saveProduct");
         const productModel = getModel('products');
+        product.creationDate = new Date();
         const newProduct = new productModel(product);
         return newProduct.save()
             .then(res => {
@@ -39,6 +40,7 @@ async function saveProduct(context, product) {
 }
 async function updateProduct(context, productId, product) {
     const productModel = getModel('products');
+    product.updatedTimeStamp = new Date();
     return productModel.findOneAndUpdate({ productId }, { $set: product }, { new: true, fields: { _id: 0, __v: 0 } });
 }
 async function getProductById(productId) {

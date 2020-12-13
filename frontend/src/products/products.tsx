@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getProduts, selectProdut, deleteProduct } from '../store/actions/productActions';
+import { getProduts, selectProdut, deleteProduct, updateProduct } from '../store/actions/productActions';
 import styles from './products.module.scss'
 import Button from '@material-ui/core/Button'
 import AddProduct from './add-product';
@@ -18,7 +18,7 @@ export class Products extends React.Component<any, any> {
     this.showHideProduct = this.showHideProduct.bind(this);
     this.onProductClick = this.onProductClick.bind(this);
     this.handleProductEvents = this.handleProductEvents.bind(this);
-    this.state = { showProducts: false };
+    this.state = { showProducts: false, products: [], userRole: '' };
     this.handleMsg()
   }
   handleMsg() {
@@ -45,16 +45,29 @@ export class Products extends React.Component<any, any> {
     this.props.selectProdut({ productId });
     messageService.sendMessage('route_navigate', { path: '/sarees/' + productId })
   }
-  handleProductEvents(event: any,eventName:string, productId:any) {
+  handleProductEvents(event: any, eventName: string, index: any) {
     event.stopPropagation();
     event.preventDefault();
-    if(eventName === 'delete'){
-      this.props.deleteProduct(productId);
+    const proudct = this.state.products[index];
+    const products = this.state.products;
+    if (eventName === 'delete') {
+      this.props.deleteProduct(proudct.productId);
+    } else if (eventName === 'visibleOff' || eventName === 'visible') {
+      products[index].isAvailable = !products[index].isAvailable;
+      this.props.updateProduct(proudct.productId, { isAvailable: products[index].isAvailable });
     }
+
+  }
+
+  componentWillReceiveProps(props: any) {
+    this.setState((state: any) => ({
+      products: props.products,
+      userRole: props.userRole
+    }));
   }
 
   render() {
-    let { products, userRole } = this.props;
+    let { products, userRole } = this.state;
     if (!products) {
       products = []
     }
@@ -80,20 +93,18 @@ export class Products extends React.Component<any, any> {
               </div>
               <div className={styles.product_label_name}>{product.name}</div>
               <div className={styles.product_label_price}>₹ {product.price}</div>
-              <div  onClick={() => this.onProductClick(product.productId)} className={styles.product_label_link}>Similar Products...</div>
+              <div onClick={() => this.onProductClick(product.productId)} className={styles.product_label_link}>More colors & design ...</div>
 
               {userRole === 'admin' ?
-               <div>
-                 <PancelIcon  onClick={(event) => this.handleProductEvents(event,'edit' ,product.productId)}></PancelIcon>
-                 <DeleteIcon onClick={(event) => this.handleProductEvents(event,'delete' ,product.productId)}></DeleteIcon> 
-                 <VisibilityIcon onClick={(event) => this.handleProductEvents(event,'visible' ,product.productId)}></VisibilityIcon> 
-                 <VisibilityOffIcon onClick={(event) => this.handleProductEvents(event,'visibleOff' ,product.productId)}></VisibilityOffIcon> 
-              </div>
-               : <span></span>}
-
-              {/* </Link> */}
-              {/* <div>Colors: <span>{product.color}</span></div> */}
-
+                <div>
+                  <PancelIcon className={styles.product_action_icons} onClick={(event) => this.handleProductEvents(event, 'edit', i)}></PancelIcon>
+                  <DeleteIcon className={styles.product_action_icons} onClick={(event) => this.handleProductEvents(event, 'delete', i)}></DeleteIcon>
+                  {product.isAvailable ?
+                    <VisibilityIcon className={styles.product_action_icons} onClick={(event) => this.handleProductEvents(event, 'visible', i)}></VisibilityIcon>
+                    :
+                    <VisibilityOffIcon className={styles.product_action_icons} onClick={(event) => this.handleProductEvents(event, 'visibleOff', i)}></VisibilityOffIcon>}
+                </div>
+                : <span></span>}
             </div>
           })}
         </div>
@@ -103,14 +114,26 @@ export class Products extends React.Component<any, any> {
   }
 }
 
+
+
+function sortProducts(arr: any) {
+  return arr.sort(function (a: any, b: any) {
+    if (a.productId < b.productId) return 1;
+    if (a.productId > b.productId) return -1;
+    return 0;
+  });
+}
+
+
 const mapStateToProps = (state: any) => {
 
-  const productsArray: any = [];
+  let productsArray: any = [];
   for (var key in state.products.products) {
     productsArray.push(state.products.products[key]);
   }
+  productsArray = sortProducts(productsArray)
   return { products: productsArray, userRole: state.user.role }
 }
 
 // export default Products
-export default connect(mapStateToProps, { getProduts, selectProdut, deleteProduct })(Products)
+export default connect(mapStateToProps, { getProduts, selectProdut, deleteProduct, updateProduct })(Products)

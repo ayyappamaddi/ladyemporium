@@ -6,7 +6,7 @@ const logger = require('../../logger');
 const response = require('../../response');
 const { catchAsync } = require('../../middleware');
 const router = express.Router();
-const orderDelimeter = 'aaa';
+const orderDelimeter = '11';
 async function handleOrders(twilioMsg) {
     const newOrder = { msgIds: [], orderImages: [], orderStatus: 'confirmed', orderDate: new Date(), shippingAddress: '' };
 
@@ -42,12 +42,12 @@ const routes = {
                 processed: false
             }
 
-            twilioMsgModel.saveTwilioMsg(context, twilioMsg);
-            // if (newMsgBody.Body && newMsgBody.Body.includes(orderDelimeter)) {
-            await handleOrders(newMsgBody.Body);
-            // twilioMsg.processed = true;
-            // }
             // twilioMsgModel.saveTwilioMsg(context, twilioMsg);
+            if (newMsgBody.Body && newMsgBody.Body.includes(orderDelimeter)) {
+                await handleOrders(newMsgBody.Body);
+                twilioMsg.processed = true;
+            }
+            twilioMsgModel.saveTwilioMsg(context, twilioMsg);
             response.success(res, { msg: 'successfully received twilio post msg' });
         } catch (err) {
             logger.error("Twilio::route::postMsg something went wrong", err.stack);
