@@ -30,7 +30,7 @@ export class Orders extends React.Component {
         const orders = this.state.orders;
         if (index === 'all') {
             for (let i = 0; i < orders.length; i++) {
-                orders[i].selected = event.target.checked;
+                orders[i].selected = event.target.checked && orders[i].orderStatus === this.state.filter.orderStatus;
             }
         } else {
             orders[index].selected = event.target.checked;
@@ -108,9 +108,9 @@ export class Orders extends React.Component {
         return <div>
             <div className={styles.shipping_actions}>
                 <span className={styles.shipping_actions_link} onClick={() => this.filterOrders.bind(this)('confirmed')} > Confirmed Orders </span>
-                <span className={styles.shipping_actions_link} onClick={() => this.filterOrders.bind(this)('dispatched')}> Dispatched Orders </span><br />
-                <Button variant="contained" color="primary" onClick={() => this.printShippingAddress.bind(this)()}> Print Orders</Button>
-                <Button variant="contained" color="primary" onClick={() => this.dispatchOrders.bind(this)()}> Dispatch Orders</Button>
+                <span className={styles.shipping_actions_link} onClick={() => this.filterOrders.bind(this)('dispatched')}> Dispatched Orders </span>
+                <Button className={styles.shipping_actions_link} variant="contained" color="primary" onClick={() => this.printShippingAddress.bind(this)()}> Print Orders</Button> &nbsp;&nbsp;&nbsp;
+                <Button className={styles.shipping_actions_link} variant="contained" color="primary" onClick={() => this.dispatchOrders.bind(this)()}> Dispatch Orders</Button>
             </div>
             <b> Displaying {this.state.filter.orderStatus} orders, count: {orders.length} </b>
             <div className={styles.shipping_address_table} >
@@ -122,7 +122,7 @@ export class Orders extends React.Component {
                 </div>
                 <div className={styles.shipping_row_list}>
                     {orders.map((order, i) => {
-                        return <div key={'order_row' + i} onClick={(event) => this.highLightOrder.bind(this)(event, order)} className={styles.shipping_row} >
+                        return <div key={'order_row' + i} className={styles.shipping_row} >
 
                             <div className={styles.column0}> <Checkbox checked={!!order.selected} onChange={(event) => this.onOrderSelectChange(event, i)} /></div>
                             <div className={styles.column1}>
@@ -130,10 +130,10 @@ export class Orders extends React.Component {
                                     aria-describedby="my-helper-text" value={order.shippingAddress}
                                     onChange={(event) => this.handleChange(event.target.value, i)} rowsMin={5} />
                             </div>
-                            <div className={styles.column2}>
+                            <div onClick={(event) => this.highLightOrder.bind(this)(event, order)} className={styles.column2}>
                                 <span> {order.orderDateTime}</span>
                             </div>
-                            <div className={cx(styles.column3, styles.image_rows)}>
+                            <div onClick={(event) => this.highLightOrder.bind(this)(event, order)} className={cx(styles.column3, styles.image_rows)}>
                                 {(order.orderImages && order.orderImages.length) ?
                                     order.orderImages.map((orderImage, j) => <img className={styles.order_img} src={orderImage}></img>) : ''}
                             </div>

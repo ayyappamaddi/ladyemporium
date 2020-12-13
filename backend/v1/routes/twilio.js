@@ -7,6 +7,7 @@ const response = require('../../response');
 const { catchAsync } = require('../../middleware');
 const router = express.Router();
 const orderDelimeter = '11';
+const printDelimeter = 'print';
 async function handleOrders(twilioMsg) {
     const newOrder = { msgIds: [], orderImages: [], orderStatus: 'confirmed', orderDate: new Date(), shippingAddress: '' };
 
@@ -21,9 +22,21 @@ async function handleOrders(twilioMsg) {
     }
     if (msgList && msgList.length) {
         await ordersModel.saveOrder(newOrder);
-
     }
-
+}
+async function printOrders(){
+    
+    msgList = await twilioMsgModel.getTwilioMsgs({ processed: false });
+    for (let i = 0; msgList && i < msgList.length; i++) {
+        const newOrder = { msgIds: [], orderImages: [], orderStatus: 'confirmed', orderDate: new Date(), shippingAddress: '' };
+        newOrder.msgIds.push(msgList[i].msgId);
+        if (msgList[i].mediaUrl) {
+            newOrder.orderImages.push(msgList[i].mediaUrl);
+        }
+        newOrder.shippingAddress += ' ' + msgList[i].msgBody
+        await twilioMsgModel.updateUnprocessedMsg(msgList[i]);
+        await ordersModel.saveOrder(newOrder);
+    }
 }
 const routes = {
 
@@ -43,7 +56,12 @@ const routes = {
             }
 
             // twilioMsgModel.saveTwilioMsg(context, twilioMsg);
-            if (newMsgBody.Body && newMsgBody.Body.includes(orderDelimeter)) {
+            console.log('-->',newMsgBody.Body);
+            console.log('printDelimeter-->',printDelimeter);
+            if (newMsgBody.Body && newMsgBody.Body.toLowerCase() === printDelimeter) {
+                await printOrders(newMsgBody.Body);
+                twilioMsg.processed = true;
+            }else if (newMsgBody.Body && newMsgBody.Body.toLowerCase() === orderDelimeter) {
                 await handleOrders(newMsgBody.Body);
                 twilioMsg.processed = true;
             }
