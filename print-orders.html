@@ -27,8 +27,15 @@
 			}
 		}
 		function getData(orderIds) {
+			let apiBasePath;
+			if (window.location.hostname === 'localhost') {
+				apiBasePath = 'http://localhost:3001';
+			} else {
+				apiBasePath = 'http://52.208.209.4';
+			}
+
 			// const url = 'http://52.208.209.4/v1/orders';
-			const url = 'http://localhost:3001/v1/orders?orderIds=' + orderIds;
+			const url = apiBasePath+'/v1/orders?orderIds=' + orderIds;
 			$.get(url, function (r) {
 				const orderHtml = prepareShippingAddressHtml(r);
 				$("#orders_list").append(orderHtml);
