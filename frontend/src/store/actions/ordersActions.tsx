@@ -29,7 +29,7 @@ export const printAndUpdateOrders = (ordersList: any) => async (dispatch: any) =
             orderIdList.push(ordersList[i].orderId);
         }
         const orderStr = orderIdList.toString();
-        window.open('http://moksha.ladyemporium.in?orders=' + orderStr, '_blank');
+        window.open('http://moksha.ladyemporium.in/print-orders.html?orders=' + orderStr, '_blank');
 
     } catch (e) {
         console.error('An Error occured while user login', e);
