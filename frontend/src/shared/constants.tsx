@@ -7,6 +7,7 @@ const productTypes: any = [
 let apiBasePath;
 
 if(window.location.hostname === 'localhost'){
+    // apiBasePath = 'http://52.208.209.4';
      apiBasePath = 'http://localhost:3001';
 }else{
     apiBasePath = 'http://52.208.209.4';

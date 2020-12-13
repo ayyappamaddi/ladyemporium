@@ -38,9 +38,6 @@ export class Orders extends React.Component {
         this.setState({ orders });
     }
 
-    componentDidUpdate(){
-        this.setState({ orders: this.state.orders });
-    }
     componentWillReceiveProps(nextProps) {
         this.shippingProducts = nextProps.orders;
         this.setState({ orders: nextProps.orders });
