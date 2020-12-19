@@ -30,7 +30,7 @@
 			if (window.location.hostname === 'localhost') {
 				apiBasePath = 'http://localhost:3001';
 			} else {
-				apiBasePath = 'http://52.208.209.4';
+				apiBasePath = 'http://52.208.209.4:443';
 			}
 			headers = { Authorization: getAccessToken() }
 			const url = apiBasePath + '/v1/orders?orderIds=' + orderIds;
@@ -73,11 +73,29 @@
 		function prepareShippingAddressHtml(r) {
 			orderHtml = '<div class="page_break">';
 			const pageBreakHtml = '</div ><div class="page_break">';
+
 			for (let i = 0; i < r.length; i++) {
-				orderHtml += '<div class="order_shipping_address"> <div>' + r[i].shippingAddress + '</div>';
-				orderHtml += '<div><img class="barcode_img" id="barcode' + i + '"/></div></div>';
-				if (i && (i + 1) % pageSize == 0)
-					orderHtml += '</div>' + pageBreakHtml;
+				if (r[i] && r[i].shippingAddress) {
+					const addressLines = r[i].shippingAddress.split(/from/i);
+
+					orderHtml += '<div class="order_shipping_address"> <div>';
+
+					for (let j = 0; j < addressLines.length; j++) {
+						orderHtml += '<p>' + addressLines[j] + '</p>';
+						if (j + 2 == addressLines.length && addressLines[j]) {
+							orderHtml += '<p><b>From: </b>' + addressLines[1] + '</p>';
+							j++;
+						}
+
+					}
+
+					r[i].shippingAddress
+
+					orderHtml += '</div>';
+					orderHtml += '<div><img class="barcode_img" id="barcode' + i + '"/></div></div>';
+					if (i && (i + 1) % pageSize == 0)
+						orderHtml += '</div>' + pageBreakHtml;
+				}
 			}
 			return orderHtml + '</div>';
 		}
@@ -104,7 +122,7 @@
 			font-size: 24px;
 		}
 
-		
+
 
 		.page_break {
 			display: flex;

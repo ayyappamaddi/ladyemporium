@@ -10,11 +10,11 @@ import PancelIcon from '@material-ui/icons/Create';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
-export class Products extends React.Component<any, any> {
+export class Products extends React.Component {
   showProducts = false;
   editProduct = undefined;
 
-  constructor(props: any) {
+  constructor(props) {
     super(props);
     this.showHideProduct = this.showHideProduct.bind(this);
     this.onProductClick = this.onProductClick.bind(this);
@@ -23,27 +23,27 @@ export class Products extends React.Component<any, any> {
     this.handleMsg()
   }
   handleMsg() {
-    messageService.getMessage().subscribe((inf: any) => { });
+    messageService.getMessage().subscribe((inf) => { });
   }
   componentDidMount() {
     this.props.getProduts()
   }
 
-  showHideProduct(toggle: boolean) {
-    
-    this.setState((state: any) => ({
+  showHideProduct(toggle) {
+
+    this.setState((state) => ({
       showProducts: toggle
     }));
-    if(!toggle){
+    if (!toggle) {
       this.editProduct = undefined;
     }
 
   }
-  onProductClick(productId: any) {
+  onProductClick(productId) {
     this.props.selectProdut({ productId });
     messageService.sendMessage('route_navigate', { path: '/sarees/' + productId })
   }
-  handleProductEvents(event: any, eventName: string, index: any) {
+  handleProductEvents(event, eventName, index) {
     event.stopPropagation();
     event.preventDefault();
     const product = this.state.products[index];
@@ -60,8 +60,15 @@ export class Products extends React.Component<any, any> {
 
   }
 
-  componentWillReceiveProps(props: any) {
-    this.setState((state: any) => ({
+  componentDidUpdate(preProps, preState) {
+    if (preProps.products !== this.props.products) {
+      this.setState({ products: this.props.products });
+    }
+  }
+
+
+  componentWillReceiveProps(props) {
+    this.setState((state) => ({
       products: props.products,
       userRole: props.userRole
     }));
@@ -87,7 +94,7 @@ export class Products extends React.Component<any, any> {
 
         {actionButton}
         <div className={styles.product_list}>
-          {products.map((product: any, i: any) => {
+          {products.map((product, i) => {
             return <div className={styles.box} key={i} onClick={() => this.onProductClick(product.productId)}>
               {/* <Link to="/kids">Dashboard */}
               <div className={styles.product_img_div} >
@@ -118,8 +125,8 @@ export class Products extends React.Component<any, any> {
 
 
 
-function sortProducts(arr: any) {
-  return arr.sort(function (a: any, b: any) {
+function sortProducts(arr) {
+  return arr.sort(function (a, b) {
     if (a.productId < b.productId) return 1;
     if (a.productId > b.productId) return -1;
     return 0;
@@ -127,9 +134,9 @@ function sortProducts(arr: any) {
 }
 
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state) => {
 
-  let productsArray: any = [];
+  let productsArray = [];
   for (var key in state.products.products) {
     productsArray.push(state.products.products[key]);
   }
