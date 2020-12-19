@@ -7,7 +7,7 @@ export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
 // user actions
 export const DO_LOGIN_USER = 'DO_LOGIN_USER';
 export const ON_LOGIN_USER = 'ON_LOGIN_USER';
-export const LOGOUT_USER = 'LOGOUT_USER'
+export const ON_LOGOUT_USER = 'ON_LOGOUT_USER'
 export const CREATE_USER = 'CREATE_USER'
 
 

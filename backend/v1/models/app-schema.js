@@ -3,7 +3,7 @@ const productSchema = new mongoose.Schema({
     name: String,
     productType: String,
     productCategory: String,
-    price: Number,
+    productMaterial:String,
     productId: Number,
     color: Object,
     description: String,
@@ -11,7 +11,8 @@ const productSchema = new mongoose.Schema({
     isAvailable: Boolean,
     origin: String,
     creationDate: Date,
-    updatedTimeStamp:Date
+    updatedTimeStamp:Date,
+    price:Number
 });
 
 const userSchema = new mongoose.Schema({

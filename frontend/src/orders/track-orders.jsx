@@ -20,8 +20,17 @@ export class TrackOrders extends React.Component {
         propObj[property] = value;
         this.setState(propObj);
     }
-    trackOderByPhone() {
-        this.props.trackOder(this.state.searchKey);
+    trackOderByPhone(){
+        this.props.trackOder(this.state.searchKey).then((res)=>{
+            console.log('res--->',res);
+        }).catch((err)=>{
+            console.log('err--->',err);
+        })
+    }
+    componentDidUpdate(preProps, preState) {
+        if (preProps.filteredOrders !== this.props.filteredOrders) {
+            this.setState({ filteredOrders: this.props.filteredOrders });
+        }
     }
 
     render() {
@@ -52,7 +61,7 @@ export class TrackOrders extends React.Component {
                     })}
                 </div>
             </div>
-        }else if(this.state.searchKey){
+        } else if (this.state.searchKey) {
             trackOrdersHtml = <div>No orders found for given number <b>{this.state.searchKey}</b></div>
         }
 
@@ -69,7 +78,7 @@ export class TrackOrders extends React.Component {
 }
 const mapStateToProps = (state) => {
 
-    return { filteredOrders: state.orders.searchOrders }
+    return { filteredOrders: state.orders.searchOrders, }
 }
 
 // export default Products

@@ -1,6 +1,6 @@
 
 
-const bcrypt = require ('bcrypt');
+const bcrypt = require('bcrypt');
 const { getModel, getSequence } = require('../../mongodb');
 const logger = require('../../logger');
 const userSchema = require('./app-schema').user;
@@ -26,10 +26,10 @@ async function getUsers() {
 async function createNewUser(context, user) {
     try {
         logger.info("user::model::saveProduct");
-        if(user.source){
+        if (user.source) {
             return saveUser(user);
-        }else{
-            bcrypt.hash(user.password, saltRounds, function(err, hash) {
+        } else {
+            bcrypt.hash(user.password, saltRounds, function (err, hash) {
                 user.hash = hash;
                 return saveUser(user);
             });
@@ -40,8 +40,8 @@ async function createNewUser(context, user) {
     }
 }
 
-async function saveUser(user){
-    try{
+async function saveUser(user) {
+    try {
         logger.info('user::model saveUser');
         const userModel = getModel('user');
         const newUser = new userModel(user);
@@ -50,9 +50,9 @@ async function saveUser(user){
                 const data = res.toJSON();
                 delete data._id;
                 delete data.__v;
-              return  data;
+                return data;
             });
-    }catch(err){
+    } catch (err) {
         logger.error('user::model saveProduct  Error occured while saving the newUser', err.stack)
         throw err;
     }
@@ -61,7 +61,9 @@ async function getUsersByUserName(userName) {
     try {
         logger.info('user::model getUserBy userName ');
         const userModel = getModel('user');
-        return userModel.findOne({ userName }, { _id: 0, __v: 0 });
+        return userModel.findOne({ userName }, { _id: 0, __v: 0 }).lean()
+            .exec()
+            .then(res => res);
     } catch (err) {
         logger.error('user::model getUsersByUserName  Error occured while fetching the user', err)
         throw err;

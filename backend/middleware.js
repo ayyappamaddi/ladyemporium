@@ -3,9 +3,11 @@ const bodyParser = require('body-parser');
 const { HEADERS } = require('./constants');
 const response = require('./response');
 const fileUpload = require('express-fileupload');
+const userModel = require('./v1/models/user');
 
 const createNamespace = require('continuation-local-storage').createNamespace;
 const logger = require('./logger');
+const utils = require('./v1/utils');
 
 function appLogs(req, res, next) {
     const myRequest = createNamespace('app-log-nameSpace');
@@ -41,6 +43,27 @@ function hasMinimumRequiredHeaders(req, res, next) {
     // }
 }
 
+async function verifyUserRole(req, res, next) {
+    if (req.headers.authorization) {
+        try {
+            if (req.headers.authorization) {
+                decodedObj = utils.verifyAccessToken(req.headers.authorization);
+                userInfo = await userModel.getUsersByUserName(decodedObj.userName);
+                if (userInfo && userInfo.userName) {
+                    req.userContext = { ...userInfo };
+                } else {
+                    response.badRequest();
+                }
+            }
+        } catch (err) {
+            response.unauthorized(res);
+        }
+    } else {
+        req.userContext = { user: '', role: 'anonymus' };
+    }
+    next();
+}
+
 function globalMiddleware() {
     const middlewareList = [];
     middlewareList.push(cors());
@@ -50,12 +73,14 @@ function globalMiddleware() {
     middlewareList.push(bodyParser.urlencoded({
         extended: true
     }));
-    
+
     middlewareList.push(bodyParser.json());
     middlewareList.push(fileUpload({
         createParentPath: true
     }));
     middlewareList.push(hasMinimumRequiredHeaders);
+    middlewareList.push(verifyUserRole);
+
     middlewareList.push(appLogs);
     return middlewareList;
 }

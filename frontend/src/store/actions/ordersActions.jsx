@@ -1,26 +1,31 @@
 import { ON_GET_ORDERS, ON_UPDATE_ORDERS, ON_SEARCH_ORDERS } from '../types'
 import axios from 'axios'
 import constants from '../../shared/constants'
-import { async } from 'q';
 
-export const trackOder = (searchKey: string) => async (dispatch:any) => {
+export const trackOder = (searchKey) => async (dispatch) => {
     try {
         const res = await axios.post(`${constants.apiBasePath}/v1/orders/search`, { searchTerm: searchKey }, { headers: { 'x-request-id': 1 } })
-        for (let i = 0; res.data && i < res.data.length; i++) {
-            const d = new Date(res.data[i].orderDate);
-            res.data[i].orderDateTime = `${d.getDate()}/${d.getMonth() + 1} ${d.getHours()}:${d.getMinutes()}`;
+            .catch(error => {
+                console.log(error.response.data.error)
+                throw error;
+            })
+        const filteredOrders = (res && res.data && res.data.length) ? res.data : [];
+        for (let i = 0; i < filteredOrders.length; i++) {
+            const d = new Date(filteredOrders[i].orderDate);
+            filteredOrders[i].orderDateTime = `${d.getDate()}/${d.getMonth() + 1} ${d.getHours()}:${d.getMinutes()}`;
         }
         dispatch({
             type: ON_SEARCH_ORDERS,
-            payload: res.data
-        })
+            payload: filteredOrders
+        });
+        return filteredOrders;
 
     } catch (e) {
         console.error('An Error occured while user login', e);
         throw e;
     }
 }
-export const dispatchOrders = (ordersList: any) => async (dispatch: any) => {
+export const dispatchOrders = (ordersList) => async (dispatch) => {
     try {
         const res = await axios.put(`${constants.apiBasePath}/v1/orders`, ordersList, { headers: { 'x-request-id': 1 } })
         dispatch({
@@ -35,7 +40,7 @@ export const dispatchOrders = (ordersList: any) => async (dispatch: any) => {
 }
 
 
-export const printAndUpdateOrders = (ordersList: any) => async (dispatch: any) => {
+export const printAndUpdateOrders = (ordersList) => async (dispatch) => {
     try {
         const res = await axios.put(`${constants.apiBasePath}/v1/orders`, ordersList, { headers: { 'x-request-id': 1 } })
         const orderIdList = [];
@@ -50,7 +55,7 @@ export const printAndUpdateOrders = (ordersList: any) => async (dispatch: any) =
         throw e;
     }
 }
-export const getOrders = () => async (dispatch: any) => {
+export const getOrders = () => async (dispatch) => {
     try {
         const res = await axios.get(`${constants.apiBasePath}/v1/orders`, { headers: { 'x-request-id': 1 } })
         for (let i = 0; res.data && i < res.data.length; i++) {

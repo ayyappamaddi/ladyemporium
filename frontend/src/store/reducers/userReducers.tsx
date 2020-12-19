@@ -1,8 +1,8 @@
-import { ON_LOGIN_USER } from '../types'
+import { ON_LOGIN_USER, ON_LOGOUT_USER } from '../types'
 
 const initialState = {
     loggedInUser: {},
-    
+
 }
 
 export default function (state = initialState, action: any) {
@@ -13,6 +13,10 @@ export default function (state = initialState, action: any) {
             return {
                 ...state,
                 ...action.payload,
+            }
+        case ON_LOGOUT_USER:
+            return {
+                loggedInUser: {}
             }
 
         default: return state

@@ -7,12 +7,11 @@
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<script src="./JsBarcode.all.min.js"></script>
 	<script>
-		const pageSize = 4;
+		const pageSize = 3;
 		Number.prototype.pad = function (n) {
 			return new Array(n).join('0').slice((n || 2) * -1) + this;
 		}
 		$(document).ready(function () {
-			console.log("ready!");
 			const orderIds = getParameterValues('orders');
 			getData(orderIds);
 		});
@@ -33,19 +32,43 @@
 			} else {
 				apiBasePath = 'http://52.208.209.4';
 			}
-
-			// const url = 'http://52.208.209.4/v1/orders';
-			const url = apiBasePath+'/v1/orders?orderIds=' + orderIds;
-			$.get(url, function (r) {
-				const orderHtml = prepareShippingAddressHtml(r);
-				$("#orders_list").append(orderHtml);
-
-				for (let i = 0; i < r.length; i++) {
-					const orderId = r[i].orderId.pad(5);
-					JsBarcode("#barcode" + i, orderId);
-				}
-			});
+			headers = { Authorization: getAccessToken() }
+			const url = apiBasePath + '/v1/orders?orderIds=' + orderIds;
+			$.ajax({ url, headers, success: renderOrders });
 		}
+		function renderOrders(data) {
+			const orderHtml = prepareShippingAddressHtml(data);
+			$("#orders_list").append(orderHtml);
+
+			for (let i = 0; i < data.length; i++) {
+				const orderId = data[i].orderId.pad(5);
+				JsBarcode("#barcode" + i, orderId);
+			}
+		}
+		function getAccessToken() {
+			const name = 'userInfo';
+			const nameLenPlus = (name.length + 1);
+			const cookieValue = document.cookie
+				.split(';')
+				.map(c => c.trim())
+				.filter(cookie => {
+					return cookie.substring(0, nameLenPlus) === `${name}=`;
+				})
+				.map(cookie => {
+					return cookie.substring(nameLenPlus);
+				})[0] || "{}";
+			let userInfo
+			try {
+				userInfo = JSON.parse(utilSerice.getCookie('userInfo'))
+			} catch (e) {
+
+			}
+			if (userInfo && userInfo.accessToken) {
+				return 'Bearer ' + userInfo.accessToken;
+			}
+			return '';
+		}
+
 
 		function prepareShippingAddressHtml(r) {
 			orderHtml = '<div class="page_break">';
@@ -72,17 +95,16 @@
 		}
 
 		.order_shipping_address {
-			min-height: 300px;
+			min-height: 250px;
 			border: 2px solid;
-			border-radius: 12px;
-			width: 45%;
-			margin-bottom: 100px;
+			border-radius: 5px;
+			width: 80%;
+			margin: 50px auto;
 			padding: 10px;
+			font-size: 24px;
 		}
 
-		.order_shipping_address:nth-child(odd) {
-			margin-right: 20px;
-		}
+		
 
 		.page_break {
 			display: flex;

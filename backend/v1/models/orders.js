@@ -3,6 +3,7 @@
 const { getModel, getSequence } = require('../../mongodb');
 const logger = require('../../logger');
 const ordersSchema = require('./app-schema').orders;
+const constants = require('../../constants');
 async function preSaveHook(next) {
     try {
         const seqName = 'orderSeq';
@@ -54,7 +55,7 @@ async function updateOrder(order) {
     }
 }
 
-async function searchOrder(searchObj) {
+async function searchOrder(conn, searchObj) {
     try {
         const ordersModel = getModel('orders');
         const query = [{
@@ -62,8 +63,15 @@ async function searchOrder(searchObj) {
                 shippingAddress: { $regex: `.*${searchObj.searchTerm}.*`, $options: 'i' }
             }
         }];
-        console.log('query==>',JSON.stringify(query));
-        return ordersModel.aggregate(query);
+        const filteredOrders = await ordersModel.aggregate(query);
+        if (filteredOrders.length && !(conn && conn.role === constants.ADMINUSER)) {
+            for (let i = 0; i < filteredOrders.length; i++) {
+                filteredOrders[i].shippingAddress = filteredOrders[i].shippingAddress.replace(/[0-9]{10}/g, function (match) {
+                    return "xxxxxxx"+match.substr(7,3);
+                })
+            }
+        }
+        return filteredOrders;
 
     } catch (err) {
         logger.error('order::model searchOrder  Error occured while fetching the order', err.stack)

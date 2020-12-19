@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getProduts, selectProdut, deleteProduct, updateProduct } from '../store/actions/productActions';
 import styles from './products.module.scss'
 import Button from '@material-ui/core/Button'
-import AddProduct from './add-product';
+import AddProduct from './add-product.jsx';
 import messageService from '../shared/message-service.js';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PancelIcon from '@material-ui/icons/Create';
@@ -12,6 +12,7 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 export class Products extends React.Component<any, any> {
   showProducts = false;
+  editProduct = undefined;
 
   constructor(props: any) {
     super(props);
@@ -22,23 +23,20 @@ export class Products extends React.Component<any, any> {
     this.handleMsg()
   }
   handleMsg() {
-    messageService.getMessage().subscribe((inf: any) => {
-      console.log('message', inf);
-    });
+    messageService.getMessage().subscribe((inf: any) => { });
   }
   componentDidMount() {
     this.props.getProduts()
   }
 
-  componentWillUpdate() {
-    console.log('it is from component will mount');
-
-  }
-
   showHideProduct(toggle: boolean) {
+    
     this.setState((state: any) => ({
       showProducts: toggle
     }));
+    if(!toggle){
+      this.editProduct = undefined;
+    }
 
   }
   onProductClick(productId: any) {
@@ -48,13 +46,16 @@ export class Products extends React.Component<any, any> {
   handleProductEvents(event: any, eventName: string, index: any) {
     event.stopPropagation();
     event.preventDefault();
-    const proudct = this.state.products[index];
+    const product = this.state.products[index];
     const products = this.state.products;
     if (eventName === 'delete') {
-      this.props.deleteProduct(proudct.productId);
+      this.props.deleteProduct(product.productId);
     } else if (eventName === 'visibleOff' || eventName === 'visible') {
       products[index].isAvailable = !products[index].isAvailable;
-      this.props.updateProduct(proudct.productId, { isAvailable: products[index].isAvailable });
+      this.props.updateProduct(product.productId, { isAvailable: products[index].isAvailable });
+    } else if (eventName === 'edit') {
+      this.editProduct = product;
+      this.showHideProduct(true)
     }
 
   }
@@ -80,7 +81,8 @@ export class Products extends React.Component<any, any> {
       <div>
 
         {this.state.showProducts ? (
-          <AddProduct cancelAddProduct={() => this.showHideProduct(false)} ></AddProduct>
+
+          <AddProduct editProduct={this.editProduct} cancelAddProduct={() => this.showHideProduct(false)} ></AddProduct>
         ) : ''}
 
         {actionButton}
@@ -135,5 +137,4 @@ const mapStateToProps = (state: any) => {
   return { products: productsArray, userRole: state.user.role }
 }
 
-// export default Products
 export default connect(mapStateToProps, { getProduts, selectProdut, deleteProduct, updateProduct })(Products)

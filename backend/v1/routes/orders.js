@@ -4,6 +4,7 @@ const ordersModel = require('../models/orders');
 const logger = require('../../logger');
 const response = require('../../response');
 const { catchAsync } = require('../../middleware');
+const constants = require('../../constants');
 const router = express.Router();
 
 const routes = {
@@ -49,9 +50,16 @@ const routes = {
     async searchOrders(req, res) {
         try {
             logger.info("order::route::searchOrders");
-            const searchObj = req.body;
+            let searchObj = req.body;
+
+            // non admins cant track orders
+            if (req.userContext && req.userContext.role === constants.ADMINUSER) {
+            } else if (!(searchObj.searchTerm.length === 10 && typeof (searchObj.searchTerm * 1 )=== "number")) {
+                response.badRequest(res, { message: "Please provide valid search term" });
+            }
+
             logger.info("order::route::searchOrders get products for given srach params", searchObj);
-            const filterdOrders = await ordersModel.searchOrder(searchObj);
+            const filterdOrders = await ordersModel.searchOrder(req.userContext, searchObj);
             response.success(res, filterdOrders);
         } catch (err) {
             logger.error("order::route::deleteOrder something went wrong", err.stack);

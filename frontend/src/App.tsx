@@ -9,12 +9,14 @@ import ProductDetailsComponent from './products/product-details';
 import Orders from './orders/orders'
 import TrackOrders from './orders/track-orders'
 import SimpleTabs from './header/nav-bar/nav-bar.js'
+import axiosInterceptor from './shared/axios-interceptor';
 
 
 class App extends React.Component<any, any> {
   studentList: any = [];
   constructor(props: any) {
     super(props);
+    axiosInterceptor.initInterceptor();
     this.state = { studentList: [], studentId: '1234', data: { name: "ayyappa" } };
     this.addStudent = this.addStudent.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -50,22 +52,11 @@ class App extends React.Component<any, any> {
             <Route exact path="/kids" component={KidsComponent} />
           </Switch>
         </div>
-
       </Router>
-      {/* <Products></Products> */}
+
     </div>);
   }
 };
 
 export default App;
 
-
-
-// <div className="App app_text">
-
-//       <ColorContext.Provider value={this.state.studentList}>
-//       Update Studnet Id: <input name="studentId" type="text" value={this.state.studentId} onChange={this.handleChange} ></input><br />
-//         <StudnetForm studentId={this.state.studentId} name="ayyappa" addStudent={this.addStudent}></StudnetForm>
-//       </ColorContext.Provider>
-//       <StudnetList studentList={this.state.studentList} name="ayyappa"></StudnetList>
-//     </div>

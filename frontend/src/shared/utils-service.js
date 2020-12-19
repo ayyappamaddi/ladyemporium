@@ -1,3 +1,4 @@
+
 function setExpiration(cookieLife) {
     const today = new Date();
     const expr = new Date(today.getTime() + cookieLife * 24 * 60 * 60 * 1000).toUTCString();

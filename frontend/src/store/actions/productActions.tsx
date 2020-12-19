@@ -7,6 +7,7 @@ export const selectProdut = (data: any) => async (dispatch: any, getState: any) 
     try {
         const state = getState();
         const avlProducts = state.products.products;
+        const loggedInUser = state.user;
         let selectedPoduct: any;
         if (avlProducts && avlProducts[data.productId]) {
             selectedPoduct = avlProducts[data.productId];
@@ -14,15 +15,22 @@ export const selectProdut = (data: any) => async (dispatch: any, getState: any) 
             const res = await axios.get(`${constants.apiBasePath}/v1/products/${data.productId}`, { headers: { 'x-request-id': 1 } })
             selectedPoduct = res.data;
         }
-        selectedPoduct.productImages.map((prodImage: any) => {
+        let visibilityImages = [];
+        if(loggedInUser && loggedInUser.role === 'admin'){
+            visibilityImages = selectedPoduct.productImages;
+        }else{
+            visibilityImages = selectedPoduct.productImages.filter((prodImag:any) => prodImag.visibility);
+        }
+        
+        visibilityImages.map((prodImage: any) => {
             prodImage.path = constants.bucketURL + data.productId + '_' + prodImage.fileName;
         });
-
+        selectedPoduct.productImages = visibilityImages;
         dispatch({
             type: SELECT_PRODUCTS,
             payload: selectedPoduct
         })
-        console.log('==>', data);
+
     } catch (err) {
         console.error('An Error occured while Selecting a product', data);
     }
@@ -42,10 +50,11 @@ export const deleteProduct = (productId: any) => async (dispatch: any) => {
 }
 export const updateProduct = (productId: any, data: any) => async (dispatch: any) => {
     try {
+        
         const res = await axios.put(`${constants.apiBasePath}/v1/products/${productId}`, data, { headers: { 'x-request-id': 1 } })
         dispatch({
             type: UPDATE_PRODUCT,
-            payload: {productId:res}
+            payload: { productId: res }
         })
 
     } catch (err) {
@@ -62,7 +71,8 @@ export const getProduts = () => async (dispatch: any) => {
         res.data.map((product: any) => {
             if (product.productImages && product.productImages.length) {
                 for (let i = 0; i < product.productImages.length; i++) {
-                    if (product.productImages[0].coverImg) {
+                    product.productImages[i].src = constants.bucketURL + product.productId + '_' + product.productImages[i].fileName;
+                    if (product.productImages[i].coverImg) {
                         product.masterFilePath = constants.bucketURL + product.productId + '_' + product.productImages[i].fileName;
                     }
                 }
@@ -88,9 +98,9 @@ export const getProduts = () => async (dispatch: any) => {
 
 export const addProduct = (product: any) => async (dispatch: any) => {
     try {
-        const productImages = product.alt_images;
+        const productImages = product.productImages;
 
-        delete product.alt_images;
+        delete product.productImages;
         delete product.displayColorPicker;
         delete product.selectedImgObj;
         product.productImages = [];
@@ -122,7 +132,7 @@ export const addProduct = (product: any) => async (dispatch: any) => {
 
         dispatch({
             type: POST_PRODUCT,
-            payload: {productId:res}
+            payload: { productId: res }
         })
 
     } catch (e) {
