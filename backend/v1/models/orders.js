@@ -19,7 +19,7 @@ ordersSchema.pre('save', preSaveHook);
 async function getOrders(query = {}) {
     try {
         const ordersModel = getModel('orders');
-        return ordersModel.find(query, { _id: 0, __v: 0 }).sort({ orderId: -1 });
+        return ordersModel.find(query, { _id: 0, __v: 0 }).sort({ orderId: -1 }).limit(250)
 
     } catch (err) {
         logger.error('twilio::model getTwilioMsgs  Error occured while getting the twiliomsg', err.stack)

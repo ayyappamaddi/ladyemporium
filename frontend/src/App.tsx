@@ -9,8 +9,9 @@ import ProductDetailsComponent from './products/product-details';
 import Orders from './orders/orders'
 import TrackOrders from './orders/track-orders'
 import SimpleTabs from './header/nav-bar/nav-bar.js'
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import axiosInterceptor from './shared/axios-interceptor';
-
 
 class App extends React.Component<any, any> {
   studentList: any = [];

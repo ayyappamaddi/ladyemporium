@@ -26,7 +26,7 @@ function SimpleTabs(props) {
     } else {
       tabList = [...defaultTabList];
     }
-    
+
     setTimeout(() => {
       setIsAdminUser(props.adminUser);
     }, 1000);
@@ -34,8 +34,10 @@ function SimpleTabs(props) {
 
 
   let history = useHistory();
-  messageService.getMessage().subscribe(event => {
-    history.push(event.data.path);
+  messageService.getMessage().subscribe(msg => {
+    if (msg.event === 'route_navigate') {
+      history.push(msg.data.path);
+    }
   });
 
 

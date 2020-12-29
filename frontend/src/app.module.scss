@@ -3,6 +3,17 @@
     width: 80%;
 }
 
+:global{
+    .slick-arrow.slick-prev{
+       left: 0px;
+        z-index: 2;
+    }
+    .slick-arrow.slick-next{
+        right: 0px;
+        z-index: 2;
+     }
+ 
+}
 
 @media only screen and (max-width: 600px) {
     .lady_emporium_content{
