@@ -64,6 +64,11 @@
     }
     .alt_poduct_img_row{
         display: flex;
+        .product_alt_img_actions{
+            display: flex;
+            justify-content: space-around;
+            max-width: 100px;
+        }
     }
     .element_row_2{
         width: 50%;

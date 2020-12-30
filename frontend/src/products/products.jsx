@@ -71,7 +71,7 @@ export class Products extends React.Component {
   }
 
   componentDidUpdate(preProps, preState) {
-    if (preProps.products !== this.props.products) {
+    if (JSON.stringify(preProps.products) !== JSON.stringify(this.props.products)) {
       this.setState({ products: this.props.products });
       utils.loadPages();
     }
@@ -189,6 +189,7 @@ const mapStateToProps = (state) => {
     productsArray.push(state.products.products[key]);
   }
   productsArray = sortProducts(productsArray)
+  console.log('updated products===>',productsArray);
   return { products: productsArray, userRole: state.user.role }
 }
 

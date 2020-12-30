@@ -49,7 +49,7 @@ async function verifyUserRole(req, res, next) {
             if (req.headers.authorization) {
                 decodedObj = utils.verifyAccessToken(req.headers.authorization);
                 userInfo = await userModel.getUsersByUserName(decodedObj.userName);
-                if (userInfo && userInfo.userName) {
+                if (userInfo && userInfo.email) {
                     req.userContext = { ...userInfo };
                 } else {
                     response.badRequest();

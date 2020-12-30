@@ -31,7 +31,7 @@ export default function (state = initialState, action: any) {
         case DELETE_PRODUCT:
             const currentProducts: any = state.products;
 
-            delete currentProducts[action.payload];
+            delete currentProducts[action.payload.productId];
             return { ...state, products: currentProducts };
         case POST_PRODUCT:
             const a = {

@@ -41,7 +41,7 @@ export const deleteProduct = (productId: any) => async (dispatch: any) => {
         const res = await axios.delete(`${constants.apiBasePath}/v1/products/${productId}`, { headers: { 'x-request-id': 1 } })
         dispatch({
             type: DELETE_PRODUCT,
-            payload: res
+            payload: {productId}
         })
     } catch (err) {
         console.error('An error occured while deleting a product', err);
@@ -52,9 +52,11 @@ export const updateProduct = (productId: any, data: any) => async (dispatch: any
     try {
         
         const res = await axios.put(`${constants.apiBasePath}/v1/products/${productId}`, data, { headers: { 'x-request-id': 1 } })
+        const payload:any = {};
+        payload[productId] = res.data;
         dispatch({
             type: UPDATE_PRODUCT,
-            payload: { productId: res }
+            payload
         })
 
     } catch (err) {
@@ -129,10 +131,11 @@ export const addProduct = (product: any) => async (dispatch: any) => {
                 await axios.put(signedURL, productFiles[i]);
             }
         }
-
+        const payload:any = {};
+        payload[productId] = res.data;
         dispatch({
             type: POST_PRODUCT,
-            payload: { productId: res }
+            payload
         })
 
     } catch (e) {

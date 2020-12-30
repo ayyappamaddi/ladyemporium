@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     role: String,
     status: String, // active or not
     userCategory: String, // it would not to create product in other category
-    userName: String,
+    email: String,
     phoneNumber: String,
     adress_state: Number,
     adress_pin: String,

@@ -3,7 +3,6 @@ import axios from 'axios'
 import constants from '../../shared/constants'
 import utilService from '../../shared/utils-service'
 import { dispatch } from 'rxjs/internal/observable/range';
-import { async } from 'q';
 
 export const doUserLogout = () => async (dispatch: any) => {
     try {
@@ -47,5 +46,23 @@ export const verifyUserLogin = () => (dispatch: any) => {
             type: ON_LOGIN_USER,
             payload: userInfo
         });
+    }
+}
+
+export const createUser = (user:any)=> async(dispatch:any)=>{
+    try{
+        const newUserRes = await axios.post(`${constants.apiBasePath}/v1/user/newUesr`, user, { headers: { 'x-request-id': 1 } });
+        user.userName = user.email;
+        const res = await axios.post(`${constants.apiBasePath}/v1/user/userLogin`, user, { headers: { 'x-request-id': 1 } })
+        const userInfo = JSON.stringify(res.data);
+        utilService.setCookie('userInfo', userInfo);
+        dispatch({
+            type: ON_LOGIN_USER,
+            payload: res.data
+        })
+        return newUserRes;
+    }catch(err){
+        console.error('An Error occured while creating an user', err);
+        throw err;
     }
 }

@@ -54,9 +54,9 @@
 				const orderId = data[i].orderId.pad(5);
 				JsBarcode("#barcode" + i, orderId);
 			}
-			setTimeout(function(){
+			setTimeout(function () {
 				window.print();
-			},5000);
+			}, 5000);
 		}
 		function getAccessToken() {
 			const name = 'userInfo';
@@ -89,8 +89,12 @@
 
 			for (let i = 0; i < r.length; i++) {
 				if (r[i] && r[i].shippingAddress) {
-
-					r[i].shippingAddress = r[i].shippingAddress.replace(/[^\d][0-9]{6}[^\d]/g, function (match) { return "<b>" + match + "</b>" });
+					let postalCode = '';
+					r[i].shippingAddress = r[i].shippingAddress.replace(/[^\d][0-9]{6}[^\d]/g, function (match) {
+						postalCode = match;
+						return "<b>" + match + "</b>"
+					});
+					
 					const addressLines = r[i].shippingAddress.split(/from/i);
 
 					orderHtml += '<div class="order_shipping_address"> <div>';
@@ -104,8 +108,7 @@
 						}
 
 					}
-
-					r[i].shippingAddress
+					orderHtml += '<p>Postalcode: <b>' + postalCode + '</b></p>';
 
 					orderHtml += '</div>';
 					orderHtml += '<div><img class="barcode_img" id="barcode' + i + '"/></div></div>';
@@ -136,7 +139,7 @@
 			margin: 50px auto;
 			padding: 10px;
 			font-size: 26px;
-		    word-break: break-word;
+			word-break: break-word;
 		}
 
 

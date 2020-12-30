@@ -5,7 +5,7 @@ function initInterceptor() {
     console.log('axis interceptor is added.. line 8');
     axios.interceptors.request.use(
         config => {
-            if(config.url.includes('s3')){
+            if (config.url.includes('s3')) {
                 return config;
             }
             let userInfo

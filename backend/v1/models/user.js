@@ -57,11 +57,13 @@ async function saveUser(user) {
         throw err;
     }
 }
-async function getUsersByUserName(userName) {
+async function getUsersByUserName(userName, mobileNumber) {
     try {
         logger.info('user::model getUserBy userName ');
         const userModel = getModel('user');
-        return userModel.findOne({ userName }, { _id: 0, __v: 0 }).lean()
+        mobileNumber = mobileNumber || userName;
+        const query = { $or: [{ 'email': userName }, { 'phoneNumber': mobileNumber }] }
+        return userModel.findOne(query, { _id: 0, __v: 0 }).lean()
             .exec()
             .then(res => res);
     } catch (err) {
@@ -69,6 +71,8 @@ async function getUsersByUserName(userName) {
         throw err;
     }
 }
+
+
 
 module.exports = {
     getUsers,

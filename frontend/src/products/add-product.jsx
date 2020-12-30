@@ -26,7 +26,6 @@ export class AddProduct extends React.Component {
   constructor(prop) {
     super(prop);
     this.handleChange = this.handleChange.bind(this);
-    this.addModifyProduct = this.addModifyProduct.bind(this);
     this.handleAltImgActions = this.handleAltImgActions.bind(this);
     this.editProduct = (prop && prop.editProduct) ? true : false;
     this.state = { ...this.emptyState, ...prop.editProduct };
@@ -239,7 +238,7 @@ export class AddProduct extends React.Component {
             </div>
           </DialogContent>
           <DialogActions>
-            <Button variant="contained" color="primary" onClick={this.addModifyProduct} >  {this.editProduct ? "Edit" : "Add"} Product</Button>
+            <Button variant="contained" color="primary" onClick={this.addModifyProduct.bind(this)} >  {this.editProduct ? "Edit" : "Add"} Product</Button>
             <Button variant="contained" color="primary" onClick={this.props.cancelAddProduct} >cancel</Button>
           </DialogActions>
         </Dialog>

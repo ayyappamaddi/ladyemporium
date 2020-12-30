@@ -27,8 +27,8 @@ const routes = {
             }
             bcrypt.compare(userInfo.password, emailUser.hash, function (err, result) {
                 if (result) {
-                    const accessToken = generateAccessToken({ userName: emailUser.userName, role: emailUser.role })
-                    response.success(res, { userName: emailUser.userName, role: emailUser.role, accessToken });
+                    const accessToken = generateAccessToken({userName:userInfo.userName, email: emailUser.email, role: emailUser.role })
+                    response.success(res, { userName: emailUser.email, phoneNumber: emailUser.phoneNumber, role: emailUser.role, accessToken });
                 } else {
                     response.badRequest(res, 'Please enter valid username & password');
                 }
@@ -45,12 +45,12 @@ const routes = {
             const context = req.userContext;
             const newUserObj = req.body;
 
-            const emailUser = await userModel.getUsersByUserName(newUserObj.userName);
+            const emailUser = await userModel.getUsersByUserName(newUserObj.email, newUserObj.phoneNumber);
             if (!emailUser) {
                 const newUser = await userModel.createNewUser(context, newUserObj);
                 response.success(res, newUser);
             } else {
-                response.badRequest(res, 'given userName exists');
+                response.badRequest(res, 'given user exists');
             }
         } catch (err) {
             logger.error("user::route::createNewUser something went wrong", err.stack);
