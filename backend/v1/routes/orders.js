@@ -23,15 +23,33 @@ const routes = {
             response.serverError(res);
         }
     },
-    async postOrder(req,res){
-        try{
+    async saveOrderInfo(req, res) {
+        try {
+            logger.info("order::route::postOrders");
+            let orderObj = {};
+            orderObj.shippingAddress = req.query.shippingAddress;
+            orderObj.msgIds = [req.query.msgId];
+            orderObj.user = req.query.user;
+            orderObj.orderDate = new Date();
+            logger.info('===========>', orderObj);
+
+            logger.info("order::route::postOrder save products for given srach params", orderObj);
+            const orderInfo = await ordersModel.saveOrder(orderObj);
+            response.success(res, orderInfo);
+        } catch (err) {
+            logger.error("order::route::saveOrderInfo something went wrong", err.stack);
+            response.serverError(res);
+        }
+    },
+    async postOrder(req, res) {
+        try {
             logger.info("order::route::postOrders");
             let orderObj = req.body;
             logger.info("order::route::postOrder save products for given srach params", orderObj);
             const orderInfo = await ordersModel.saveOrder(orderObj);
             response.success(res, orderInfo);
 
-        }catch(err){
+        } catch (err) {
             logger.error("order::route::postOrder something went wrong", err.stack);
             response.serverError(res);
         }
@@ -67,7 +85,7 @@ const routes = {
 
             // non admins cant track orders
             if (req.userContext && req.userContext.role === constants.ADMINUSER) {
-            } else if (!(searchObj.searchTerm.length === 10 && typeof (searchObj.searchTerm * 1 )=== "number")) {
+            } else if (!(searchObj.searchTerm.length === 10 && typeof (searchObj.searchTerm * 1) === "number")) {
                 response.badRequest(res, { message: "Please provide valid search term" });
             }
 
@@ -97,6 +115,7 @@ router.post('/', catchAsync(routes.postOrder));
 router.post('/search', catchAsync(routes.searchOrders));
 router.put('/', catchAsync(routes.updateOrderList));
 router.put('/:orderId', catchAsync(routes.updateOrder));
+router.get('/saveOrder', catchAsync(routes.saveOrderInfo));
 router.delete('/:orderId', catchAsync(routes.deleteOrder));
 
 
