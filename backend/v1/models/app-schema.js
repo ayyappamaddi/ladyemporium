@@ -34,9 +34,11 @@ const ordersSchema = new mongoose.Schema({
     orderId: Number,
     shippingAddress: String,
     orderImages: [String],
-    msgIds: [Number],
+    msgIds: [],
     orderDate: Date,
-    orderStatus: String
+    orderStatus: String,
+    phoneNumbers: [String],
+    user:String
 });
 
 

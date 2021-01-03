@@ -91,10 +91,12 @@
 				if (r[i] && r[i].shippingAddress) {
 					let postalCode = '';
 					r[i].shippingAddress = r[i].shippingAddress.replace(/[^\d][0-9]{6}[^\d]/g, function (match) {
-						postalCode = match;
+						match.replace(/[0-9]{6}/g, function(code){
+							postalCode = code;
+						});
 						return "<b>" + match + "</b>"
 					});
-					
+
 					const addressLines = r[i].shippingAddress.split(/from/i);
 
 					orderHtml += '<div class="order_shipping_address"> <div>';
@@ -108,7 +110,9 @@
 						}
 
 					}
-					orderHtml += '<p>Postalcode: <b>' + postalCode + '</b></p>';
+					if(Postalcode){
+						orderHtml += '<p>Postalcode: <b>' + postalCode + '</b></p>';
+					}
 
 					orderHtml += '</div>';
 					orderHtml += '<div><img class="barcode_img" id="barcode' + i + '"/></div></div>';

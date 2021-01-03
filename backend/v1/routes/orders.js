@@ -23,6 +23,19 @@ const routes = {
             response.serverError(res);
         }
     },
+    async postOrder(req,res){
+        try{
+            logger.info("order::route::postOrders");
+            let orderObj = req.body;
+            logger.info("order::route::postOrder save products for given srach params", orderObj);
+            const orderInfo = await ordersModel.saveOrder(orderObj);
+            response.success(res, orderInfo);
+
+        }catch(err){
+            logger.error("order::route::postOrder something went wrong", err.stack);
+            response.serverError(res);
+        }
+    },
     async updateOrderList(req, res) {
         try {
             logger.info("order::route::updateOrderList");
@@ -80,6 +93,7 @@ const routes = {
 };
 
 router.get('/', catchAsync(routes.getOrders));
+router.post('/', catchAsync(routes.postOrder));
 router.post('/search', catchAsync(routes.searchOrders));
 router.put('/', catchAsync(routes.updateOrderList));
 router.put('/:orderId', catchAsync(routes.updateOrder));

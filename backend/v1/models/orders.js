@@ -4,6 +4,7 @@ const { getModel, getSequence } = require('../../mongodb');
 const logger = require('../../logger');
 const ordersSchema = require('./app-schema').orders;
 const constants = require('../../constants');
+const utils =  require('../utils');
 async function preSaveHook(next) {
     try {
         const seqName = 'orderSeq';
@@ -32,6 +33,10 @@ async function saveOrder(order) {
     try {
         logger.info("orders::model::saveOrder");
         const ordersModel = getModel('orders');
+        if(order.shippingAddress){
+            order.phoneNumbers =  utils.getPhoneNumbers(order.shippingAddress) || [];
+        }
+
         const newOrder = new ordersModel(order);
         return newOrder.save()
             .then(res => {
