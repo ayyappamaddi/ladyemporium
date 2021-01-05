@@ -1,5 +1,7 @@
 
 const express = require('express');
+var fs = require('fs');
+var https = require('https');
 const { config } = require('./config');
 const routers = require('./v1/routes');
 const { middlewares } = require('./middleware');
@@ -10,8 +12,21 @@ const app = express();
 connect();
 
 function startHttpServer() {
-    app.listen(config.PORT);
-    console.log('Express app started on port ' + config.PORT);
+    // app.listen(config.PORT);
+    try{
+        var privateKey  = fs.readFileSync(__dirname+'/sslcert/privkey.pem', 'utf8');
+        var certificate = fs.readFileSync(__dirname+'/sslcert/cert.pem', 'utf8');
+    
+        var credentials = {key: privateKey, cert: certificate};
+    
+        var httpsServer = https.createServer(credentials, app);
+        httpsServer.listen(config.PORT);
+    
+        console.log('Express app started on port ' + config.PORT);
+    }catch(err){
+        console.log('Error occured while starting https server..',err);
+    }
+
 }
 
 function errorHandler(err, req, res, next){
