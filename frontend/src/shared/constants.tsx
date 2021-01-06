@@ -38,7 +38,7 @@ if (window.location.hostname === 'localhost') {
     // apiBasePath = 'http://52.208.209.4';
     apiBasePath = 'http://localhost:3001';
 } else {
-    apiBasePath = 'http://52.208.209.4:443';
+    apiBasePath = 'https://api.ladyemporium.in';
 }
 
 const bucketURL = 'https://i-0d2da3be9c27bae0b.s3.amazonaws.com/'
