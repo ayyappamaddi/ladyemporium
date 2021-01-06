@@ -16,8 +16,9 @@ function startHttpServer() {
     try{
         var privateKey  = fs.readFileSync(__dirname+'/sslcert/privkey.pem', 'utf8');
         var certificate = fs.readFileSync(__dirname+'/sslcert/cert.pem', 'utf8');
+        var ca = fs.readFileSync(__dirname+'/sslcert/chain.pem', 'utf8');
     
-        var credentials = {key: privateKey, cert: certificate};
+        var credentials = {key: privateKey, cert: certificate, ca};
     
         var httpsServer = https.createServer(credentials, app);
         httpsServer.listen(config.PORT);
