@@ -30,7 +30,7 @@
 			if (window.location.hostname === 'localhost') {
 				apiBasePath = 'http://localhost:3001';
 			} else {
-				apiBasePath = 'http://52.208.209.4:443';
+				apiBasePath = 'https://api.ladyemporium.in';
 			}
 			headers = { Authorization: getAccessToken() }
 			const url = apiBasePath + '/v1/orders?orderIds=' + orderIds;
