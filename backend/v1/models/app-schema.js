@@ -38,6 +38,7 @@ const ordersSchema = new mongoose.Schema({
     orderDate: Date,
     orderStatus: String,
     phoneNumbers: [String],
+    trackId: String,
     user:String
 });
 

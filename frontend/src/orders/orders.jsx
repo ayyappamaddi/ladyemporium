@@ -5,6 +5,7 @@ import { TextareaAutosize } from '@material-ui/core';
 import styles from './orders.module.scss'
 import cx from 'classnames'
 import { Button, Checkbox } from '@material-ui/core';
+import { AddTrackOrder } from './add-tracker';
 
 export class Orders extends React.Component {
     shippingAddressList = [];
@@ -13,6 +14,7 @@ export class Orders extends React.Component {
         super(props);
         this.state = { orders: [], filter: { orderStatus: 'confirmed' } };
         this.handleChange = this.handleChange.bind(this);
+        this.addTrackOrders = this.addTrackOrders.bind(this);
     }
 
     componentDidMount() {
@@ -68,10 +70,13 @@ export class Orders extends React.Component {
         this.setState({ filter: stateFilter });
     }
 
-    highLightOrder(event, order){
+    highLightOrder(event, order) {
         event.preventDefault();
         event.stopPropagation();
-        this.setState({currentOrder: order});
+        this.setState({ currentOrder: order });
+    }
+    addTrackOrders(toggle) {
+        this.setState({ showAddTracker: toggle });
     }
     render() {
         let orders = this.state.orders ? this.state.orders : [];
@@ -93,7 +98,7 @@ export class Orders extends React.Component {
                         {(currentOrder.orderImages && currentOrder.orderImages.length) ?
                             currentOrder.orderImages.map((orderImage, j) => <img className={styles.order_img} src={orderImage}></img>) : ''}
                     </div>
-                    <Button variant="contained" color="primary" onClick={(event) => this.highLightOrder.bind(this)(event,undefined)}> Close</Button>
+                    <Button variant="contained" color="primary" onClick={(event) => this.highLightOrder.bind(this)(event, undefined)}> Close</Button>
                 </div>
                 <div className={styles.current_order_img}>
                     {(currentOrder.orderImages && currentOrder.orderImages.length) ?
@@ -107,7 +112,8 @@ export class Orders extends React.Component {
                 <span className={styles.shipping_actions_link} onClick={() => this.filterOrders.bind(this)('confirmed')} > Confirmed Orders </span>
                 <span className={styles.shipping_actions_link} onClick={() => this.filterOrders.bind(this)('dispatched')}> Dispatched Orders </span>
                 <Button className={styles.shipping_actions_link} variant="contained" color="primary" onClick={() => this.printShippingAddress.bind(this)()}> Print Orders</Button> &nbsp;&nbsp;&nbsp;
-                <Button className={styles.shipping_actions_link} variant="contained" color="primary" onClick={() => this.dispatchOrders.bind(this)()}> Dispatch Orders</Button>
+                <Button className={styles.shipping_actions_link} variant="contained" color="primary" onClick={() => this.dispatchOrders.bind(this)()}> Dispatch All Orders</Button> &nbsp;&nbsp;&nbsp;
+                <Button className={styles.shipping_actions_link} variant="contained" color="primary" onClick={() => this.addTrackOrders(true)}> Add Tracker</Button> &nbsp;&nbsp;&nbsp;
             </div>
             <b> Displaying {this.state.filter.orderStatus} orders, count: {orders.length} </b>
             <div className={styles.shipping_address_table} >
@@ -139,6 +145,7 @@ export class Orders extends React.Component {
                 </div>
             </div>
             {currentOrderHtml}
+            {(this.state.showAddTracker) ? <AddTrackOrder cancelTrack={() => this.addTrackOrders(false)} ></AddTrackOrder> : <div></div>}
         </div>
     }
 }

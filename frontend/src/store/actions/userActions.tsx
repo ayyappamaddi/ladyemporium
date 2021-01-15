@@ -53,13 +53,15 @@ export const createUser = (user:any)=> async(dispatch:any)=>{
     try{
         const newUserRes = await axios.post(`${constants.apiBasePath}/v1/user/newUesr`, user, { headers: { 'x-request-id': 1 } });
         user.userName = user.email;
-        const res = await axios.post(`${constants.apiBasePath}/v1/user/userLogin`, user, { headers: { 'x-request-id': 1 } })
-        const userInfo = JSON.stringify(res.data);
-        utilService.setCookie('userInfo', userInfo);
-        dispatch({
-            type: ON_LOGIN_USER,
-            payload: res.data
-        })
+        setTimeout(async ()=>{
+            const res = await axios.post(`${constants.apiBasePath}/v1/user/userLogin`, user, { headers: { 'x-request-id': 1 } })
+            const userInfo = JSON.stringify(res.data);
+            utilService.setCookie('userInfo', userInfo);
+            dispatch({
+                type: ON_LOGIN_USER,
+                payload: res.data
+            })
+        },2000);
         return newUserRes;
     }catch(err){
         console.error('An Error occured while creating an user', err);

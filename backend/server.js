@@ -7,12 +7,12 @@ const routers = require('./v1/routes');
 const { middlewares } = require('./middleware');
 const mongo = require('./mongodb');
 const logger = require('./logger');
+const rabitmq = require('./rabitmq');
 const app = express();
 
 connect();
 
 function startHttpServer() {
-    // app.listen(config.PORT);
     try{
         var privateKey  = fs.readFileSync(__dirname+'/sslcert/privkey.pem', 'utf8');
         var certificate = fs.readFileSync(__dirname+'/sslcert/cert.pem', 'utf8');
@@ -52,6 +52,7 @@ async function connect() {
         await mongo.initialiseMongo();
         initializeExpress();
         startHttpServer();
+        rabitmq.subscribeToRabbitmq();
         globalErrorHandler();
     } catch (err) {
         console.log('error while starting application');

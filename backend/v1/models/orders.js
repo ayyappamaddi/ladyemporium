@@ -53,7 +53,7 @@ async function saveOrder(order) {
 async function updateOrder(order) {
     try {
         const ordersModel = getModel('orders');
-        return ordersModel.updateOne({ orderId: order.orderId }, { $set: order })
+        return ordersModel.updateOne({ orderId: order.orderId, user:order.user }, { $set: order })
     } catch (err) {
         logger.error('order::model updateOrder  Error occured while updating the order', err.stack)
         throw err;

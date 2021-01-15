@@ -22,12 +22,15 @@ const routes = {
         try {
             const userInfo = req.body;
             const emailUser = await userModel.getUsersByUserName(userInfo.userName);
+
             if (!emailUser) {
+                logger.error('********** user doent exist ' + userInfo.userName);
                 response.badRequest(res, 'Please enter valid username & password');
+                return;
             }
             bcrypt.compare(userInfo.password, emailUser.hash, function (err, result) {
                 if (result) {
-                    const accessToken = generateAccessToken({userName:userInfo.userName, email: emailUser.email, role: emailUser.role })
+                    const accessToken = generateAccessToken({ userName: userInfo.userName, email: emailUser.email, role: emailUser.role })
                     response.success(res, { userName: emailUser.email, phoneNumber: emailUser.phoneNumber, role: emailUser.role, accessToken });
                 } else {
                     response.badRequest(res, 'Please enter valid username & password');

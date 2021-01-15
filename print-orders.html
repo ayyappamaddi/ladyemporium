@@ -45,18 +45,23 @@
 			});
 		}
 		function renderOrders(data) {
-			data = sortProducts(data)
-
-			const orderHtml = prepareShippingAddressHtml(data);
-			$("#orders_list").append(orderHtml);
-
-			for (let i = 0; i < data.length; i++) {
-				const orderId = data[i].orderId.pad(5);
-				JsBarcode("#barcode" + i, orderId);
+			try{
+				data = sortProducts(data)
+	
+				const orderHtml = prepareShippingAddressHtml(data);
+				// $("#orders_list").append(orderHtml);
+	
+				for (let i = 0; i < data.length; i++) {
+					const orderId = data[i].orderId.pad(5);
+					JsBarcode("#barcode" + i, orderId);
+				}
+				setTimeout(function () {
+					window.print();
+				}, 5000);
+			}catch(err){
+				console.error('Error occured while render orders ', err);
+				alert('Error occured while  renderOrders \n Please Contact 9663923281');
 			}
-			setTimeout(function () {
-				window.print();
-			}, 5000);
 		}
 		function getAccessToken() {
 			const name = 'userInfo';
@@ -86,41 +91,50 @@
 		function prepareShippingAddressHtml(r) {
 			orderHtml = '<div class="page_break">';
 			const pageBreakHtml = '</div ><div class="page_break">';
+			try {
 
-			for (let i = 0; i < r.length; i++) {
-				if (r[i] && r[i].shippingAddress) {
-					let postalCode = '';
-					r[i].shippingAddress = r[i].shippingAddress.replace(/[^\d][0-9]{6}[^\d]/g, function (match) {
-						match.replace(/[0-9]{6}/g, function(code){
-							postalCode = code;
+				for (let i = 0; i < r.length; i++) {
+					if (r[i] && r[i].shippingAddress) {
+						let postalCode = '';
+						r[i].shippingAddress = r[i].shippingAddress.replace(/[^\d][0-9]{6}[^\d]/g, function (match) {
+							match.replace(/[0-9]{6}/g, function (code) {
+								postalCode = code;
+							});
+							return "<b>" + match + "</b>"
 						});
-						return "<b>" + match + "</b>"
-					});
 
-					const addressLines = r[i].shippingAddress.split(/from/i);
+						const addressLines = r[i].shippingAddress.split(/from/i);
 
-					orderHtml += '<div class="order_shipping_address"> <div>';
+						orderHtml += '<div class="order_shipping_address"> <div>';
 
-					for (let j = 0; j < addressLines.length; j++) {
+						for (let j = 0; j < addressLines.length; j++) {
 
-						orderHtml += '<p>' + addressLines[j] + '</p>';
-						if (j + 2 == addressLines.length && addressLines[j]) {
-							orderHtml += '<p><b>From: </b>' + addressLines[1] + '</p>';
-							j++;
+							orderHtml += '<p>' + addressLines[j] + '</p>';
+							if (j + 2 == addressLines.length && addressLines[j]) {
+								orderHtml += '<p><b>From: </b>' + addressLines[1] + '</p>';
+								j++;
+							}
+
+						}
+						if (postalCode) {
+							orderHtml += '<p>Postalcode: <b>' + postalCode + '</b></p>';
 						}
 
+						orderHtml += '</div>';
+						orderHtml += '<div><img class="barcode_img" id="barcode' + i + '"/></div></div>';
+						if (i && (i + 1) % pageSize == 0) {
+							orderHtml += '</div> </div>';
+							$("#orders_list").append(orderHtml);
+							orderHtml = '<div class="page_break">';
+						}
 					}
-					if(Postalcode){
-						orderHtml += '<p>Postalcode: <b>' + postalCode + '</b></p>';
-					}
-
-					orderHtml += '</div>';
-					orderHtml += '<div><img class="barcode_img" id="barcode' + i + '"/></div></div>';
-					if (i && (i + 1) % pageSize == 0)
-						orderHtml += '</div>' + pageBreakHtml;
 				}
+			} catch (err) {
+				console.error('Error occured while  prepare shipping orders html', err);
+				alert('Error occured while  prepare shipping orders html \n Please Contact 9663923281');
 			}
-			return orderHtml + '</div>';
+
+			// return orderHtml + '</div>';
 		}
 	</script>
 	<style>

@@ -1,6 +1,7 @@
 import { ON_GET_ORDERS, ON_UPDATE_ORDERS, ON_SEARCH_ORDERS } from '../types'
 import axios from 'axios'
 import constants from '../../shared/constants'
+import { async } from 'rxjs'
 
 export const trackOder = (searchKey) => async (dispatch) => {
     try {
@@ -34,7 +35,29 @@ export const dispatchOrders = (ordersList) => async (dispatch) => {
         })
 
     } catch (e) {
-        console.error('An Error occured while user login', e);
+        console.error('An Error occured while updating the order', e);
+        throw e;
+    }
+}
+
+export const getOrderById = async (orderId) => {
+    try {
+        const orderQuery = "?orderIds=" + orderId;
+        const res = await axios.get(`${constants.apiBasePath}/v1/orders${orderQuery}`, { headers: { 'x-request-id': 1 } })
+        return res.data && res.data[0];
+
+    } catch (e) {
+        console.error('An Error occured while getting order', e);
+        throw e;
+    }
+}
+
+export const updateTrackOrder = async (trackInfo) => {
+    try {
+        const res = await axios.put(`${constants.apiBasePath}/v1/orders/trackOrder/${trackInfo.orderId}`, trackInfo, { headers: { 'x-request-id': 1 } });
+        return res;
+    } catch (e) {
+        console.error('An Error occured while getting order', e);
         throw e;
     }
 }
@@ -42,7 +65,7 @@ export const dispatchOrders = (ordersList) => async (dispatch) => {
 
 export const printAndUpdateOrders = (ordersList) => async (dispatch) => {
     try {
-        const res = await axios.put(`${constants.apiBasePath}/v1/orders`, ordersList, { headers: { 'x-request-id': 1 } })
+        // const res = await axios.put(`${constants.apiBasePath}/v1/orders`, ordersList, { headers: { 'x-request-id': 1 } })
         const orderIdList = [];
         for (let i = 0; i < ordersList.length; i++) {
             orderIdList.push(ordersList[i].orderId);

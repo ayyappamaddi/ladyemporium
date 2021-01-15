@@ -2,6 +2,7 @@ const ROUTE_URI = 'twilio';
 const express = require('express');
 const twilioMsgModel = require('../models/twilio');
 const ordersModel = require('../models/orders');
+const usersModel = require('../models/user');
 const logger = require('../../logger');
 const response = require('../../response');
 const { catchAsync } = require('../../middleware');
@@ -24,7 +25,7 @@ async function handleOrders(twilioMsg) {
         await ordersModel.saveOrder(newOrder);
     }
 }
-async function printOrders(){
+async function printOrders(userName){
     
     msgList = await twilioMsgModel.getTwilioMsgs({ processed: false });
     for (let i = 0; msgList && i < msgList.length; i++) {
@@ -33,7 +34,8 @@ async function printOrders(){
         if (msgList[i].mediaUrl) {
             newOrder.orderImages.push(msgList[i].mediaUrl);
         }
-        newOrder.shippingAddress += ' ' + msgList[i].msgBody
+        newOrder.shippingAddress += ' ' + msgList[i].msgBody;
+        newOrder.user = userName;
         await twilioMsgModel.updateUnprocessedMsg(msgList[i]);
         await ordersModel.saveOrder(newOrder);
     }
@@ -56,10 +58,11 @@ const routes = {
             }
 
             // twilioMsgModel.saveTwilioMsg(context, twilioMsg);
-            console.log('-->',newMsgBody.Body);
-            console.log('printDelimeter-->',printDelimeter);
             if (newMsgBody.Body && newMsgBody.Body.toLowerCase() === printDelimeter) {
-                await printOrders(newMsgBody.Body);
+                const phoneNumber = twilioMsg.msgFrom.replace("whatsapp:+91",'');
+                const userInfo = await usersModel.getUsersByUserName('',phoneNumber);
+                newMsgBody.Body.user = userInfo.name;
+                await printOrders(userInfo.name);
                 twilioMsg.processed = true;
             }else if (newMsgBody.Body && newMsgBody.Body.toLowerCase() === orderDelimeter) {
                 await handleOrders(newMsgBody.Body);
