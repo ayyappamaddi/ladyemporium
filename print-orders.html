@@ -77,9 +77,9 @@
 				})[0] || "{}";
 			let userInfo
 			try {
-				userInfo = JSON.parse(utilSerice.getCookie('userInfo'))
+				userInfo = JSON.parse(cookieValue);
 			} catch (e) {
-
+				console.error('Error occured while reriving cookie',e)
 			}
 			if (userInfo && userInfo.accessToken) {
 				return 'Bearer ' + userInfo.accessToken;
@@ -129,6 +129,11 @@
 						}
 					}
 				}
+
+				if(orderHtml !== '<div class="page_break">'){
+					$("#orders_list").append(orderHtml);
+				}
+
 			} catch (err) {
 				console.error('Error occured while  prepare shipping orders html', err);
 				alert('Error occured while  prepare shipping orders html \n Please Contact 9663923281');

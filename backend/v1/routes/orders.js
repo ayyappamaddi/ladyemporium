@@ -17,6 +17,7 @@ const routes = {
                 const orderIds = req.query['orderIds'];
                 query.orderId = { $in: orderIds.split(',') };
             }
+            logger.info('get Orders for following query', JSON.stringify(query));
             const ordersList = await ordersModel.getOrders(query);
             response.success(res, ordersList);
         } catch (err) {
@@ -85,7 +86,7 @@ const routes = {
             logger.info("order::route::updatTrackeOrder");
 
             for (let i = 0; i < orderDetails[0].phoneNumbers.length; i++) {
-                const msObj = { phoneNo: orderDetails[0].phoneNumbers[i], msg: "Your order Been dispatched, trackId:" + orderInfo.trackId};
+                const msObj = { phoneNo: orderDetails[0].phoneNumbers[i], msg: "Your order Been dispatched, trackId:" + orderInfo.trackId };
                 var buf = Buffer.from(JSON.stringify(msObj), 'utf8');
                 await rabitmq.publishMsg(buf);
             }
