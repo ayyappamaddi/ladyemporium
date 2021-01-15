@@ -13,6 +13,8 @@ const app = express();
 connect();
 
 function startHttpServer() {
+    app.listen(config.PORT);
+    return;
     try{
         var privateKey  = fs.readFileSync(__dirname+'/sslcert/privkey.pem', 'utf8');
         var certificate = fs.readFileSync(__dirname+'/sslcert/cert.pem', 'utf8');

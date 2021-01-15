@@ -26,12 +26,15 @@ const userSchema = new mongoose.Schema({
     adress_pin: String,
     adress_distic: String,
     adress_full: String,
-    hash: String
+    hash: String,
+    userId:Number,
+    shortName:String
 });
 
 
 const ordersSchema = new mongoose.Schema({
     orderId: Number,
+    orderNumber:String,
     shippingAddress: String,
     orderImages: [String],
     msgIds: [],
@@ -59,7 +62,9 @@ const counterSchema = new mongoose.Schema({
     productSeq: Number,
     userSeq: Number,
     twilioMsgSeq: Number,
-    orderSeq: Number
+    orderSeq: Number,
+    AMSeq:Number,
+    VPSeq:Number
 });
 
 

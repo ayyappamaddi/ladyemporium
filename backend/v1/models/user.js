@@ -9,7 +9,7 @@ async function preSaveHook(next) {
     try {
         const seqName = 'usertSeq';
         const result = await getSequence(seqName, this);
-        this.productId = result[seqName];
+        this.userId = result[seqName];
         next();
     } catch (ex) {
         next(ex);

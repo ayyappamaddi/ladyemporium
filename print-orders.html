@@ -45,20 +45,20 @@
 			});
 		}
 		function renderOrders(data) {
-			try{
+			try {
 				data = sortProducts(data)
-	
+
 				const orderHtml = prepareShippingAddressHtml(data);
 				// $("#orders_list").append(orderHtml);
-	
+
 				for (let i = 0; i < data.length; i++) {
-					const orderId = data[i].orderId.pad(5);
+					const orderId = data[i].orderNumber || data[i].orderId.pad(5);
 					JsBarcode("#barcode" + i, orderId);
 				}
 				setTimeout(function () {
 					window.print();
 				}, 5000);
-			}catch(err){
+			} catch (err) {
 				console.error('Error occured while render orders ', err);
 				alert('Error occured while  renderOrders \n Please Contact 9663923281');
 			}

@@ -1,15 +1,21 @@
 
 
 const { getModel, getSequence } = require('../../mongodb');
+const { getUsersByUserName } = require('./user');
 const logger = require('../../logger');
 const ordersSchema = require('./app-schema').orders;
 const constants = require('../../constants');
-const utils =  require('../utils');
+const utils = require('../utils');
 async function preSaveHook(next) {
     try {
         const seqName = 'orderSeq';
         const result = await getSequence(seqName, this);
+        const userInfo = await getUsersByUserName(this.user);
+        const orderSeqInfo = await getSequence(userInfo.shortName + 'Seq', this);
+        const orderSeq = orderSeqInfo[userInfo.shortName + 'Seq'] + '';
+        const orderNumb = userInfo.shortName + new Array(6 - orderSeq.length).join('0') + orderSeq;
         this.orderId = result[seqName];
+        this.orderNumber = orderNumb;
         next();
     } catch (ex) {
         next(ex);
@@ -33,8 +39,8 @@ async function saveOrder(order) {
     try {
         logger.info("orders::model::saveOrder");
         const ordersModel = getModel('orders');
-        if(order.shippingAddress){
-            order.phoneNumbers =  utils.getPhoneNumbers(order.shippingAddress) || [];
+        if (order.shippingAddress) {
+            order.phoneNumbers = utils.getPhoneNumbers(order.shippingAddress) || [];
         }
 
         const newOrder = new ordersModel(order);
@@ -53,7 +59,7 @@ async function saveOrder(order) {
 async function updateOrder(order) {
     try {
         const ordersModel = getModel('orders');
-        return ordersModel.updateOne({ orderId: order.orderId, user:order.user }, { $set: order })
+        return ordersModel.updateOne({ orderId: order.orderId, user: order.user }, { $set: order })
     } catch (err) {
         logger.error('order::model updateOrder  Error occured while updating the order', err.stack)
         throw err;
@@ -72,7 +78,7 @@ async function searchOrder(conn, searchObj) {
         if (filteredOrders.length && !(conn && conn.role === constants.ADMINUSER)) {
             for (let i = 0; i < filteredOrders.length; i++) {
                 filteredOrders[i].shippingAddress = filteredOrders[i].shippingAddress.replace(/[0-9]{10}/g, function (match) {
-                    return "xxxxxxx"+match.substr(7,3);
+                    return "xxxxxxx" + match.substr(7, 3);
                 })
             }
         }

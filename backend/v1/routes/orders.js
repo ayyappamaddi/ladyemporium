@@ -75,8 +75,8 @@ const routes = {
     },
     async updatTrackeOrder(req, res) {
         try {
-            const orderId = +req.params.orderId;
-            const orderDetails = await ordersModel.getOrders({ orderId, user: req.userContext.name });
+            const orderNumber = +req.params.orderNumber;
+            const orderDetails = await ordersModel.getOrders({ orderNumber, user: req.userContext.name });
             orderInfo = {};
             orderInfo.trackId = req.body.trackId;
             orderInfo.orderStatus = 'dispatched';
@@ -132,7 +132,7 @@ router.get('/', catchAsync(routes.getOrders));
 router.post('/', catchAsync(routes.postOrder));
 router.post('/search', catchAsync(routes.searchOrders));
 router.put('/', catchAsync(routes.updateOrderList));
-router.put('/trackOrder/:orderId', catchAsync(routes.updatTrackeOrder));
+router.put('/trackOrder/:orderNumber', catchAsync(routes.updatTrackeOrder));
 router.get('/:orderId', catchAsync(routes.deleteOrder));
 router.get('/saveOrder', catchAsync(routes.saveOrderInfo));
 router.delete('/:orderId', catchAsync(routes.deleteOrder));
