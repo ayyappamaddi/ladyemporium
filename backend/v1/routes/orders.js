@@ -66,6 +66,7 @@ const routes = {
             const updateOrderList = req.body;
 
             for (let i = 0; i < updateOrderList.length; i++) {
+                updateOrderList[i].user = req.userContext.name;
                 await ordersModel.updateOrder(updateOrderList[i]);
             }
             response.success(res, 'orders are updated');
