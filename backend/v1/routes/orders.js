@@ -54,7 +54,7 @@ const routes = {
             for (let i = 0; i < orderInfo.phoneNumbers.length; i++) {
                 const msObj = {
                     phoneNo: orderInfo.phoneNumbers[i],
-                    msg: "Your order Been confirmed \n shipping address:" + orderObj.shippingAddress + " \n THIS IS AUTO GENERATED MSG \n *** Please donot reply ***"
+                    msg: "Your order Been confirmed  shipping address:" + orderObj.shippingAddress + "  THIS IS AUTO GENERATED MSG  *** Please donot reply ***"
                 };
                 var buf = Buffer.from(JSON.stringify(msObj), 'utf8');
                 await rabitmq.publishMsg(buf);
@@ -95,7 +95,7 @@ const routes = {
             for (let i = 0; i < orderDetails[0].phoneNumbers.length; i++) {
                 const msObj = {
                     phoneNo: orderDetails[0].phoneNumbers[i],
-                    msg: "Your order Been dispatche\nd, trackId:" + req.body.trackId + " \n THIS IS AUTO GENERATED MSG \n *** Please donot reply ***"
+                    msg: "Your order Been dispatche d, trackId:" + req.body.trackId + " THIS IS AUTO GENERATED MSG *** Please donot reply ***"
                 };
                 logger.info(msObj.phoneNo, '<=====>', msObj.msg);
                 var buf = Buffer.from(JSON.stringify(msObj), 'utf8');
