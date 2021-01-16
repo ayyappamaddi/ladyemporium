@@ -83,7 +83,7 @@ const routes = {
     },
     async updatTrackeOrder(req, res) {
         try {
-            const orderNumber = +req.params.orderNumber;
+            const orderNumber = req.params.orderNumber;
             const orderDetails = await ordersModel.getOrders({ orderNumber, user: req.userContext.name });
             orderInfo = {};
             orderInfo.trackId = req.body.trackId;
