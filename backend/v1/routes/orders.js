@@ -17,6 +17,9 @@ const routes = {
                 const orderIds = req.query['orderIds'];
                 query.orderId = { $in: orderIds.split(',') };
             }
+            if(req.query && req.query['orderNumber']){
+                query.orderNumber = req.query['orderNumber'];
+            }
             logger.info('get Orders for following query', JSON.stringify(query));
             const ordersList = await ordersModel.getOrders(query);
             response.success(res, ordersList);
@@ -141,7 +144,7 @@ router.post('/', catchAsync(routes.postOrder));
 router.post('/search', catchAsync(routes.searchOrders));
 router.put('/', catchAsync(routes.updateOrderList));
 router.put('/trackOrder/:orderNumber', catchAsync(routes.updatTrackeOrder));
-router.get('/:orderId', catchAsync(routes.deleteOrder));
+// router.get('/:orderId', catchAsync(routes.deleteOrder));
 router.get('/saveOrder', catchAsync(routes.saveOrderInfo));
 router.delete('/:orderId', catchAsync(routes.deleteOrder));
 

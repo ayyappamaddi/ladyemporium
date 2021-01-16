@@ -40,9 +40,9 @@ export const dispatchOrders = (ordersList) => async (dispatch) => {
     }
 }
 
-export const getOrderById = async (orderId) => {
+export const getOrderByTrackId = async (orderId) => {
     try {
-        const orderQuery = "?orderIds=" + orderId;
+        const orderQuery = "?orderNumber=" + orderId;
         const res = await axios.get(`${constants.apiBasePath}/v1/orders${orderQuery}`, { headers: { 'x-request-id': 1 } })
         return res.data && res.data[0];
 

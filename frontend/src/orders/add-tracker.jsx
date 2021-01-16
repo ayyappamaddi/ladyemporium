@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import styles from './add-tracker.module.scss';
 import { PageLoader } from '../components/page-loader'
 import { Button, Input, FormControl, InputLabel, Dialog, DialogTitle, DialogContent, DialogActions, FormHelperText } from '@material-ui/core';
-import { trackOder, getOrderById, updateTrackOrder } from '../store/actions/ordersActions';
+import { trackOder, getOrderByTrackId, updateTrackOrder } from '../store/actions/ordersActions';
 
 export class AddTrackOrder extends React.Component {
 
@@ -58,7 +58,7 @@ export class AddTrackOrder extends React.Component {
     }
     async getOrderInfo() {
         if (this.state.orderNumber !== '') {
-            getOrderById(this.state.orderNumber).then((orderInfo) => {
+            getOrderByTrackId(this.state.orderNumber).then((orderInfo) => {
                 if (orderInfo && orderInfo.shippingAddress) {
                     this.setState({ orderError: false, errorMsg: '', orderDescription: orderInfo.shippingAddress });
                 } else {
