@@ -49,7 +49,10 @@ const routes = {
             logger.info("order::route::postOrder save products for given srach params", orderObj);
             const orderInfo = await ordersModel.saveOrder(orderObj);
             for (let i = 0; i < orderInfo.phoneNumbers.length; i++) {
-                const msObj = { phoneNo: orderInfo.phoneNumbers[i], msg: "Your order Been confirmed i=>" + i + " orderId=>" + orderInfo.orderId };
+                const msObj = {
+                    phoneNo: orderInfo.phoneNumbers[i],
+                    msg: "Your order Been confirmed \n shipping address:" + orderObj.shippingAddress + " \n THIS IS AUTO GENERATED MSG \n *** Please donot reply ***"
+                };
                 var buf = Buffer.from(JSON.stringify(msObj), 'utf8');
                 await rabitmq.publishMsg(buf);
             }
@@ -87,7 +90,10 @@ const routes = {
             logger.info("order::route::updatTrackeOrder");
 
             for (let i = 0; i < orderDetails[0].phoneNumbers.length; i++) {
-                const msObj = { phoneNo: orderDetails[0].phoneNumbers[i], msg: "Your order Been dispatched, trackId:" + orderInfo.trackId };
+                const msObj = {
+                    phoneNo: orderDetails[0].phoneNumbers[i],
+                    msg: "Your order Been dispatche\nd, trackId:" + orderInfo.trackId + + " \n THIS IS AUTO GENERATED MSG \n *** Please donot reply ***"
+                };
                 var buf = Buffer.from(JSON.stringify(msObj), 'utf8');
                 await rabitmq.publishMsg(buf);
             }
