@@ -17,7 +17,7 @@ const routes = {
                 const orderIds = req.query['orderIds'];
                 query.orderId = { $in: orderIds.split(',') };
             }
-            if(req.query && req.query['orderNumber']){
+            if (req.query && req.query['orderNumber']) {
                 query.orderNumber = req.query['orderNumber'];
             }
             logger.info('get Orders for following query', JSON.stringify(query));
@@ -95,8 +95,9 @@ const routes = {
             for (let i = 0; i < orderDetails[0].phoneNumbers.length; i++) {
                 const msObj = {
                     phoneNo: orderDetails[0].phoneNumbers[i],
-                    msg: "Your order Been dispatche\nd, trackId:" + orderInfo.trackId + + " \n THIS IS AUTO GENERATED MSG \n *** Please donot reply ***"
+                    msg: "Your order Been dispatche\nd, trackId:" + req.body.trackId + " \n THIS IS AUTO GENERATED MSG \n *** Please donot reply ***"
                 };
+                logger.info(msObj.phoneNo, '<=====>', msObj.msg);
                 var buf = Buffer.from(JSON.stringify(msObj), 'utf8');
                 await rabitmq.publishMsg(buf);
             }
