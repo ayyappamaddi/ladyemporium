@@ -84,11 +84,13 @@ const routes = {
     async updatTrackeOrder(req, res) {
         try {
             const orderNumber = req.params.orderNumber;
+            logger.info('logged in user ', req.userContext.name);
             const orderDetails = await ordersModel.getOrders({ orderNumber, user: req.userContext.name });
             orderInfo = {};
             orderInfo.trackId = req.body.trackId;
             orderInfo.orderStatus = 'dispatched';
             orderInfo.orderId = orderDetails[0].orderId;
+            orderInfo.user = orderDetails[0].user;
             const updatedOrderInfo = await ordersModel.updateOrder(orderInfo);
             logger.info("order::route::updatTrackeOrder");
 
