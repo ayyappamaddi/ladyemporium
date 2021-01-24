@@ -9,9 +9,9 @@ const utils = require('../utils');
 async function preSaveHook(next) {
     try {
         const seqName = 'orderSeq';
-        const result = await getSequence(seqName, this);
+        const result = (await getSequence(seqName, this)).value
         const userInfo = await getUsersByUserName(this.user);
-        const orderSeqInfo = await getSequence(userInfo.shortName + 'Seq', this);
+        const orderSeqInfo = (await getSequence(userInfo.shortName + 'Seq', this)).value;
         const orderSeq = orderSeqInfo[userInfo.shortName + 'Seq'] + '';
         const orderNumb = userInfo.shortName + new Array(6 - orderSeq.length).join('0') + orderSeq;
         this.orderId = result[seqName];

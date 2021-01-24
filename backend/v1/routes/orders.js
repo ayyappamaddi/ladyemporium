@@ -7,12 +7,13 @@ const { catchAsync } = require('../../middleware');
 const constants = require('../../constants');
 const rabitmq = require('../../rabitmq');
 const router = express.Router();
+const userModel = require('../models/user');
 
 const routes = {
     async getOrders(req, res) {
         try {
             logger.info("order::route::getOrders");
-            const query = { user: req.userContext.name };
+            const query = { user: req.userContext.email };
             if (req.query && req.query['orderIds']) {
                 const orderIds = req.query['orderIds'];
                 query.orderId = { $in: orderIds.split(',') };
@@ -49,6 +50,8 @@ const routes = {
         try {
             logger.info("order::route::postOrders");
             let orderObj = req.body;
+            let userInfo = await userModel.getUsersByUserName(orderObj.user, orderObj.userPhone);
+            orderObj.user = userInfo.email;
             logger.info("order::route::postOrder save products for given srach params", orderObj);
             const orderInfo = await ordersModel.saveOrder(orderObj);
             for (let i = 0; i < orderInfo.phoneNumbers.length; i++) {

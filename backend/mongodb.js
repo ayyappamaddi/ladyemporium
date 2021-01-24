@@ -49,16 +49,34 @@ function getModel(collection) {
         return mongooseConn.model(collection);
     }
 }
-function getSequence(seqName, _this) {
+async function getSequence(seqName, _this) {
+    const appSeqInfo = await _this.db.collection('counters').findOne({});
+    const upadateObj = {};
+    if (appSeqInfo && appSeqInfo[seqName]) {
+        upadateObj[seqName] = appSeqInfo[seqName] + 1;
+    } else {
+        upadateObj[seqName] = 1;
+    }
+
+    return _this.db.collection('counters').findOneAndUpdate({}, { $set: upadateObj });
     // logger.info('Model :: deal:: getSequence: finding and updating sequence by one');
-    return _this.db.models.counter.findOneAndUpdate({},
-        {
-            $inc: { [seqName]: 1 }
-        },
-        {
-            new: true,
-            upsert: true
-        });
+    // const allSeqInfo = await _this.db.models.counter.findOne({})
+    // if (allSeqInfo && allSeqInfo[seqName]) {
+    //     return _this.db.models.counter.findOneAndUpdate({},
+    //         {
+    //             $inc: { [seqName]: 1 }
+    //         },
+    //         {
+    //             new: true,
+    //             upsert: true
+    //         });
+    // } else {
+    //     return _this.db.models.counter.findOneAndUpdate({},
+    //         {
+    //             $set: { seqName: 1 }
+    //         });
+    // }
+
 }
 
 module.exports = {

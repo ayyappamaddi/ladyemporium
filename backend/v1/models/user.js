@@ -44,6 +44,8 @@ async function saveUser(user) {
     try {
         logger.info('user::model saveUser');
         const userModel = getModel('user');
+        let shortNameInfo = user.name.split(' ');
+        user.shortName = shortNameInfo[0][0] + (shortNameInfo.length === 2 ? shortNameInfo[1][0] : shortNameInfo[0][1]);
         const newUser = new userModel(user);
         return newUser.save()
             .then(res => {
