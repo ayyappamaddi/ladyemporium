@@ -78,7 +78,7 @@ const routes = {
             const updateOrderList = req.body;
 
             for (let i = 0; i < updateOrderList.length; i++) {
-                updateOrderList[i].user = req.userContext.name;
+                updateOrderList[i].user = req.userContext.email;
                 await ordersModel.updateOrder(updateOrderList[i]);
             }
             response.success(res, 'orders are updated');
@@ -90,8 +90,8 @@ const routes = {
     async updatTrackeOrder(req, res) {
         try {
             const orderNumber = req.params.orderNumber;
-            logger.info('logged in user ', req.userContext.name);
-            const orderDetails = await ordersModel.getOrders({ orderNumber, user: req.userContext.name });
+            logger.info('logged in user email ', req.userContext.email);
+            const orderDetails = await ordersModel.getOrders({ orderNumber, user: req.userContext.email });
             orderInfo = {};
             orderInfo.trackId = req.body.trackId;
             orderInfo.orderStatus = 'dispatched';
