@@ -21,11 +21,12 @@ function SimpleTabs(props) {
   const [value, setTabIndex] = React.useState(0);
   const [isAdminUser, setIsAdminUser] = React.useState(0);
   useEffect(() => {
-    if (props.adminUser) {
-      tabList = [...defaultTabList, ...adminTabs];
-    } else {
-      tabList = [...defaultTabList];
-    }
+    tabList = [...defaultTabList, ...adminTabs];
+    // if (props.adminUser) {
+    //   tabList = [...defaultTabList, ...adminTabs];
+    // } else {
+    //   tabList = [...defaultTabList];
+    // }
 
     setTimeout(() => {
       setIsAdminUser(props.adminUser);

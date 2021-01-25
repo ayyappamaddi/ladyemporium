@@ -41,7 +41,8 @@ export const verifyUserLogin = () => (dispatch: any) => {
             console.log('An error occured while getting userInfo');
         }
     }
-    if (userInfo && userInfo.role) {
+    if (userInfo && userInfo.accessToken) {
+        userInfo.role = userInfo.role || 'user';
         dispatch({
             type: ON_LOGIN_USER,
             payload: userInfo
@@ -49,11 +50,11 @@ export const verifyUserLogin = () => (dispatch: any) => {
     }
 }
 
-export const createUser = (user:any)=> async(dispatch:any)=>{
-    try{
+export const createUser = (user: any) => async (dispatch: any) => {
+    try {
         const newUserRes = await axios.post(`${constants.apiBasePath}/v1/user/newUesr`, user, { headers: { 'x-request-id': 1 } });
         user.userName = user.email;
-        setTimeout(async ()=>{
+        setTimeout(async () => {
             const res = await axios.post(`${constants.apiBasePath}/v1/user/userLogin`, user, { headers: { 'x-request-id': 1 } })
             const userInfo = JSON.stringify(res.data);
             utilService.setCookie('userInfo', userInfo);
@@ -61,9 +62,9 @@ export const createUser = (user:any)=> async(dispatch:any)=>{
                 type: ON_LOGIN_USER,
                 payload: res.data
             })
-        },2000);
+        }, 2000);
         return newUserRes;
-    }catch(err){
+    } catch (err) {
         console.error('An Error occured while creating an user', err);
         throw err;
     }

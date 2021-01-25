@@ -12,6 +12,9 @@ const userModel = require('../models/user');
 const routes = {
     async getOrders(req, res) {
         try {
+            if(!(req.userContext && req.userContext.email)){
+                response.unauthorized(res);
+            }
             logger.info("order::route::getOrders");
             const query = { user: req.userContext.email };
             if (req.query && req.query['orderIds']) {

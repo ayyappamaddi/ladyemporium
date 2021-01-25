@@ -22,7 +22,7 @@ class HeaderComponent extends React.Component<any, any> {
             slide: 'div',
         };
         let carosalHTML;
-        if (!(this.props.selectedProduct && this.props.selectedProduct.name) && (this.props.userRole !== 'admin')) {
+        if (!(this.props.selectedProduct && this.props.selectedProduct.name) && !this.props.userRole) {
             carosalHTML = <Slider {...settings}>
                 <div>
                     <img className={styles.carousel_image} src={require('../assets/images/carosal_saree1.jpg')}></img>
