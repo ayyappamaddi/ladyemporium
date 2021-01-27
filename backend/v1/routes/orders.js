@@ -60,7 +60,7 @@ const routes = {
             for (let i = 0; i < orderInfo.phoneNumbers.length; i++) {
                 const msObj = {
                     phoneNo: orderInfo.phoneNumbers[i],
-                    msg: "Your order Been confirmed Order No: " + orderObj.orderNumber + "  shipping address:" + orderObj.shippingAddress + "  THIS IS AUTO GENERATED MSG  *** Please donot reply ***"
+                    msg: "Your order Been confirmed Order No: " + orderInfo.orderNumber + "  shipping address:" + orderObj.shippingAddress + "  THIS IS AUTO GENERATED MSG  *** Please donot reply ***"
                 };
                 var buf = Buffer.from(JSON.stringify(msObj), 'utf8');
                 await rabitmq.publishMsg(buf);
