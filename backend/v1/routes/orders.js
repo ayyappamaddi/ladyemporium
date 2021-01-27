@@ -12,7 +12,7 @@ const userModel = require('../models/user');
 const routes = {
     async getOrders(req, res) {
         try {
-            if(!(req.userContext && req.userContext.email)){
+            if (!(req.userContext && req.userContext.email)) {
                 response.unauthorized(res);
             }
             logger.info("order::route::getOrders");
@@ -60,7 +60,7 @@ const routes = {
             for (let i = 0; i < orderInfo.phoneNumbers.length; i++) {
                 const msObj = {
                     phoneNo: orderInfo.phoneNumbers[i],
-                    msg: "Your order Been confirmed  shipping address:" + orderObj.shippingAddress + "  THIS IS AUTO GENERATED MSG  *** Please donot reply ***"
+                    msg: "Your order Been confirmed Order No: " + orderObj.orderNumber + "  shipping address:" + orderObj.shippingAddress + "  THIS IS AUTO GENERATED MSG  *** Please donot reply ***"
                 };
                 var buf = Buffer.from(JSON.stringify(msObj), 'utf8');
                 await rabitmq.publishMsg(buf);

@@ -28,17 +28,25 @@ export class AddTrackOrder extends React.Component {
 
             updateTrackOrder({ orderId: this.state.orderNumber, trackId: this.state.trackNumber })
                 .then((res) => {
+                    this.handleSuccessMsg(this.state.orderNumber, this.state.trackNumber);
                     this.setState({
-                        orderNumber: '', trackNumber: '', orderError: false, errorMsg: '', orderDescription: '', pageLoader: false
+                        orderNumber: '', trackNumber: '', orderError: false, errorMsg: '', orderDescription: '', pageLoader: false,
+                        phoneNumbers: []
                     });
                     const childNodes = this.orderNumberRef.childNodes;
                     if (childNodes && childNodes.length) {
                         ReactDOM.findDOMNode(childNodes[0]).focus();
                     }
                 }, (err) => {
-                    this.setState({ orderError: true,pageLoader: false, errorMsg: ' Something went wrong to update Track Id' });
+                    this.setState({ orderError: true, pageLoader: false, errorMsg: ' Something went wrong to update Track Id' });
                 })
         }
+    }
+    handleSuccessMsg(orderId, trackNumber) {
+        this.setState({ successMsg: `For Order No: ${orderId}, TrackId : ${trackNumber} added.` });
+        setTimeout(() => {
+            this.setState({ successMsg: '' });
+        }, 5000);
     }
 
     onKeyUp(event) {
@@ -60,12 +68,15 @@ export class AddTrackOrder extends React.Component {
         if (this.state.orderNumber !== '') {
             getOrderByTrackId(this.state.orderNumber).then((orderInfo) => {
                 if (orderInfo && orderInfo.shippingAddress) {
-                    this.setState({ orderError: false, errorMsg: '', orderDescription: orderInfo.shippingAddress });
+                    this.setState({
+                        orderError: false, errorMsg: '', orderDescription: orderInfo.shippingAddress,
+                        phoneNumbers: orderInfo.phoneNumbers || []
+                    });
                 } else {
-                    this.setState({ orderError: true, errorMsg: 'No orders found for given order number', orderDescription: '' });
+                    this.setState({ orderError: true, errorMsg: 'No orders found for given order number', orderDescription: '', phoneNumbers: [] });
                 }
             }, (err) => {
-                this.setState({ orderError: true, errorMsg: 'No orders found for given order number', orderDescription: '' });
+                this.setState({ orderError: true, errorMsg: 'No orders found for given order number', orderDescription: '', phoneNumbers: [] });
             });
         }
     }
@@ -90,11 +101,16 @@ export class AddTrackOrder extends React.Component {
                 </div>
                 <div className={styles.order_details}>
                     {this.state.orderError ? <span className={styles.error_msg}>{this.state.errorMsg}</span> : <span></span>}
+                    {this.state.successMsg ? <span className={styles.success_msg}>{this.state.successMsg}</span> : ''}
+                    <h3>Phone Numbers:</h3>
+                    {this.state.phoneNumbers && this.state.phoneNumbers.length  ? <b>{this.state.phoneNumbers.toString()}</b> : ''}
+                    <br/>
                     <h3>Order Details</h3>
                     <FormControl className={styles.order_address}>
                         <TextareaAutosize value={this.state.orderDescription} id="product-description" aria-describedby="my-helper-text" rowsMin={4} />
                         <FormHelperText id="my-helper-text">Order Address</FormHelperText>
                     </FormControl>
+
 
                 </div>
                 <PageLoader showLoader={this.state.pageLoader}></PageLoader>

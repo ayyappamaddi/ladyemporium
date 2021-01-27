@@ -26,11 +26,19 @@
         margin-right: 40px;
     }
 }
+.shipping_actions{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
 .shipping_address_page{
         width: 100%;
     }
 .shipping_address_table{
     height: 80%;
+}
+.shipping_actions_btn{
+    margin-bottom: 5px important;
 }
 .shipping_actions_link{
     cursor: pointer;
