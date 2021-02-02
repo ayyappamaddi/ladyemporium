@@ -20,6 +20,16 @@ const verifyAccessToken = (authorization) => {
     }
 }
 
+const getPostalCode = (msg)=>{
+    let postalCode;
+    msg = msg.trim();
+    msg.replace(/[^\d][0-9]{6}[^\d]/g, function (match) {
+        postalCode = match;
+        return '';
+    });
+    return postalCode;
+}
+
 const getPhoneNumbers = (msg) => {
     try {
         msg = msg.trim();
@@ -50,5 +60,6 @@ const getPhoneNumbers = (msg) => {
 module.exports = {
     generateAccessToken,
     verifyAccessToken,
-    getPhoneNumbers
+    getPhoneNumbers,
+    getPostalCode
 }

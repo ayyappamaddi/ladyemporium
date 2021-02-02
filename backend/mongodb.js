@@ -50,15 +50,18 @@ function getModel(collection) {
     }
 }
 async function getSequence(seqName, _this) {
-    const appSeqInfo = await _this.db.collection('counters').findOne({});
-    const upadateObj = {};
-    if (appSeqInfo && appSeqInfo[seqName]) {
-        upadateObj[seqName] = appSeqInfo[seqName] + 1;
-    } else {
-        upadateObj[seqName] = 1;
-    }
+    return _this.db.collection('counters').findOneAndUpdate({},
+        {
+            $inc: { [seqName]: 1 }
+        },
+        {
+            new: true,
+            upsert: true
+        });
 
-    return _this.db.collection('counters').findOneAndUpdate({}, { $set: upadateObj });
+
+
+
     // logger.info('Model :: deal:: getSequence: finding and updating sequence by one');
     // const allSeqInfo = await _this.db.models.counter.findOne({})
     // if (allSeqInfo && allSeqInfo[seqName]) {

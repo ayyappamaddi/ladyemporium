@@ -42,6 +42,9 @@ async function saveOrder(order) {
         if (order.shippingAddress) {
             order.phoneNumbers = utils.getPhoneNumbers(order.shippingAddress) || [];
         }
+        if (order.shippingAddress) {
+            order.postalCode = utils.getPostalCode(order.shippingAddress);
+        }
 
         const newOrder = new ordersModel(order);
         return newOrder.save()

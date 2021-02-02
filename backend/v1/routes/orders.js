@@ -58,9 +58,25 @@ const routes = {
             logger.info("order::route::postOrder save products for given srach params", orderObj);
             const orderInfo = await ordersModel.saveOrder(orderObj);
             for (let i = 0; i < orderInfo.phoneNumbers.length; i++) {
+                orderMsg = `Your order Been confirmed Order No: ${orderInfo.orderNumber} `;
+                if (orderInfo.postalCode) {
+                    orderMsg += ` Shipping postcode: ${orderInfo.postalCode}`;
+                }
+
+                if (orderInfo.phoneNumbers && orderInfo.phoneNumbers.length) {
+                    orderMsg += ` With Phone numbers: `;
+                    let separator = '';
+                    orderInfo.phoneNumbers.map(phoneNo => {
+                        phoneNo.replace(/^\d{1,5}/, m => m.replace(/\d/g, '*'));
+                        orderMsg += `${phoneNo}${separator} `;
+                        separator = ',';
+                    });
+                }
+                orderMsg += 'THIS IS AUTO GENERATED MSG  *** Please donot reply ***';
+
                 const msObj = {
                     phoneNo: orderInfo.phoneNumbers[i],
-                    msg: "Your order Been confirmed Order No: " + orderInfo.orderNumber + "  shipping address:" + orderObj.shippingAddress + "  THIS IS AUTO GENERATED MSG  *** Please donot reply ***"
+                    msg: orderMsg
                 };
                 var buf = Buffer.from(JSON.stringify(msObj), 'utf8');
                 await rabitmq.publishMsg(buf);

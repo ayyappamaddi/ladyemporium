@@ -12,6 +12,7 @@ const productSchema = new mongoose.Schema({
     origin: String,
     creationDate: Date,
     updatedTimeStamp:Date,
+    postalCode: String,
     price:Number
 });
 
