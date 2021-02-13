@@ -53,6 +53,10 @@ const routes = {
         try {
             logger.info("order::route::postOrders");
             let orderObj = req.body;
+            if(!orderObj.shippingAddress || orderObj.shippingAddress.length > 350 ){
+                response.serverError(res);
+                return;
+            }
             let userInfo = await userModel.getUsersByUserName(orderObj.user, orderObj.userPhone);
             orderObj.user = userInfo.email;
             logger.info("order::route::postOrder save products for given srach params", orderObj);
