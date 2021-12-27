@@ -6,13 +6,14 @@ import styles from './orders.module.scss'
 import cx from 'classnames'
 import { Button, Checkbox } from '@material-ui/core';
 import { AddTrackOrder } from './add-tracker';
+import { PageLoader } from '../components/page-loader'
 
 export class Orders extends React.Component {
     shippingAddressList = [];
 
     constructor(props) {
         super(props);
-        this.state = { orders: [], filter: { orderStatus: 'confirmed' } };
+        this.state = { orders: [], filter: { orderStatus: 'confirmed' }, pageLoader: false };
         this.handleChange = this.handleChange.bind(this);
         this.addTrackOrders = this.addTrackOrders.bind(this);
     }
@@ -64,7 +65,11 @@ export class Orders extends React.Component {
                 dispatchedOrders.push({ orderId: orders[i].orderId, orderStatus: 'dispatched' });
             }
         }
-        this.props.dispatchOrders(dispatchedOrders);
+        this.setState({ pageLoader: true });
+        this.props.dispatchOrders(dispatchedOrders).then(res => {
+            this.setState({ pageLoader: false });
+            this.props.getOrders();
+        });
     }
     filterOrders(orderStatus) {
         const stateFilter = this.state.filter;
@@ -110,9 +115,11 @@ export class Orders extends React.Component {
         }
 
         return <div>
+            <iframe src="https://web.whatsapp.com/" width="300px" height="300px"></iframe>
+            {/* <PageLoader showLoader={this.state.pageLoader}></PageLoader>
             <div className={styles.shipping_actions}>
-                <span className={styles.shipping_actions_link} onClick={() => this.filterOrders.bind(this)('confirmed')} > Confirmed </span>
-                <span className={styles.shipping_actions_link} onClick={() => this.filterOrders.bind(this)('dispatched')}> Dispatched </span>
+                <Button onClick={() => this.filterOrders.bind(this)('confirmed')} >Confirmed</Button>
+                <Button onClick={() => this.filterOrders.bind(this)('dispatched')} >Dispatched</Button>
                 <Button className={styles.shipping_actions_btn} variant="contained" color="primary" onClick={() => this.printShippingAddress.bind(this)()}> Print</Button> &nbsp;&nbsp;&nbsp;
                 <Button className={styles.shipping_actions_btn} variant="contained" color="primary" onClick={() => this.dispatchOrders.bind(this)()}> Dispatch All </Button> &nbsp;&nbsp;&nbsp;
                 <Button className={styles.shipping_actions_btn} variant="contained" color="primary" onClick={() => this.addTrackOrders(true)}> Add Tracker</Button> &nbsp;&nbsp;&nbsp;
@@ -147,7 +154,7 @@ export class Orders extends React.Component {
                 </div>
             </div>
             {currentOrderHtml}
-            {(this.state.showAddTracker) ? <AddTrackOrder cancelTrack={() => this.addTrackOrders(false)} ></AddTrackOrder> : <div></div>}
+            {(this.state.showAddTracker) ? <AddTrackOrder cancelTrack={() => this.addTrackOrders(false)} ></AddTrackOrder> : <div></div>} */}
         </div>
     }
 }

@@ -12,9 +12,14 @@ function a11yProps(index) {
   };
 }
 
-let defaultTabList = [{ path: '/sarees', label: 'home' },
-{ path: '/track_order', label: 'Track Order' }];
-const adminTabs = [{ path: 'orders', label: 'Order Management' }];
+let defaultTabList = [
+  { path: '/sarees', label: 'home' },
+  // { path: '/track_order', label: 'Track Order' }
+];
+const adminTabs = [
+  { path: 'orders', label: 'Order Management' },
+  { path: 'reports', label: 'Reports' }
+];
 let tabList = [...defaultTabList];
 
 function SimpleTabs(props) {

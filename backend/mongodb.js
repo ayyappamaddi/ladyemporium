@@ -28,18 +28,18 @@ function registerSchema() {
 async function initialiseMongo() {
     try {
         // logger.info('initializing mongo');
-
+        console.log("Mongodb::initialiseMongo");
         const dbConn = await mongoose.connect(config.MONGODB_URL,
             { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
         // logger.info('db object obtained');
-        mongooseConn = registerSchema()
-
+        mongooseConn = registerSchema();
+        console.log("mongodb connection established.");
         // logger.addContext('resourceName', 'Mongo');
         // logger.info('connected to mongodb host -', mongoUrlWithoutPassword);
         masterConnection = dbConn;
 
     } catch (err) {
-        console.log('Failed to establish connection', err);
+        console.log('Failed to establish Mongo connection', err);
         // logger.fatal('Failed to connect to Mongo', JSON.stringify(err));
         throw err;
     }

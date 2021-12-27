@@ -1,6 +1,6 @@
 const amqp = require('amqplib');
 const { func } = require('joi');
-const amqpurl = "amqps://lwfovwpk:Mn8VFOAi_0UbAvLhAVU-LkuPjZ0jL-UH@jellyfish.rmq.cloudamqp.com/lwfovwpk";
+const amqpurl = "amqps://jmwvbqkc:n4W9b_2JY5ydHPeyTDC-TSWP_VJShiJx@hornet.rmq.cloudamqp.com/jmwvbqkc";
 let channel;
 async function queueOperation() {
     console.log('subscriber - queue operation called for org provisioning');

@@ -1,0 +1,21 @@
+.selectFormControl{
+    width: 200px;
+}
+
+.orderTableContainer {
+    height: calc(100vh - 150px);
+    margin-top: 30px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    
+}
+
+.orderTableContainer .tableHeaderCell{
+    padding: 0px;
+}
+
+.orderTableContainer .tableDataCell{
+    padding: 0px;
+    font-size: 12px;
+}
+

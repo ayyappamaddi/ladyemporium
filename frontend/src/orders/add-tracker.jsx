@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { TextareaAutosize } from '@material-ui/core';
 import ReactDOM from 'react-dom';
 import styles from './add-tracker.module.scss';
-import { PageLoader } from '../components/page-loader'
+import { PageLoader } from '../components/page-loader';
 import { Button, Input, FormControl, InputLabel, Dialog, DialogTitle, DialogContent, DialogActions, FormHelperText } from '@material-ui/core';
 import { trackOder, getOrderByTrackId, updateTrackOrder } from '../store/actions/ordersActions';
 

@@ -24,6 +24,9 @@ const routes = {
             if (req.query && req.query['orderNumber']) {
                 query.orderNumber = req.query['orderNumber'];
             }
+            if (req.query && req.query['dateRange']) {
+                
+            }
             logger.info('get Orders for following query', JSON.stringify(query));
             const ordersList = await ordersModel.getOrders(query);
             response.success(res, ordersList);
@@ -53,7 +56,7 @@ const routes = {
         try {
             logger.info("order::route::postOrders");
             let orderObj = req.body;
-            if(!orderObj.shippingAddress || orderObj.shippingAddress.length > 350 ){
+            if(orderObj.shippingAddress.length > 350 ){
                 response.serverError(res);
                 return;
             }

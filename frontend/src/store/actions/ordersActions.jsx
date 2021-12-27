@@ -33,7 +33,7 @@ export const dispatchOrders = (ordersList) => async (dispatch) => {
             type: ON_UPDATE_ORDERS,
             payload: ordersList
         })
-
+        return res;
     } catch (e) {
         console.error('An Error occured while updating the order', e);
         throw e;
@@ -90,8 +90,22 @@ export const getOrders = () => async (dispatch) => {
             type: ON_GET_ORDERS,
             payload: res.data
         });
+
     } catch (e) {
         console.error('An Error occured while user login', e);
         throw e;
     }
+}
+
+export const findOrders = async (query) => {
+    const res = await axios.get(`${constants.apiBasePath}/v1/orders`, { headers: { 'x-request-id': 1 } })
+    for (let i = 0; res.data && i < res.data.length; i++) {
+        res.data[i].sno = i+1;
+        if(res.data[i].orderDate){
+            const d = new Date(res.data[i].orderDate);
+            res.data[i].orderDateTime = `${d.getDate()}/${d.getMonth() + 1} ${d.getHours()}:${d.getMinutes()}`;
+        }
+
+    }
+    return res.data;
 }

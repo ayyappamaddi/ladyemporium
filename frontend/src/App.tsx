@@ -8,6 +8,9 @@ import KidsComponent from './products/kids/kids';
 import ProductDetailsComponent from './products/product-details';
 import Orders from './orders/orders'
 import TrackOrders from './orders/track-orders'
+import ReportsComponent from './reports/reports-component'
+
+
 import SimpleTabs from './header/nav-bar/nav-bar.js'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -48,6 +51,7 @@ class App extends React.Component<any, any> {
             </Route>
             <Route exact path="/sarees" component={Products} />
             <Route exact path="/orders" component={Orders} />
+            <Route exact path="/reports" component={ReportsComponent} />
             <Route exact path="/track_order" component={TrackOrders} />
             <Route exact path="/sarees/:productId" component={ProductDetailsComponent} />
             <Route exact path="/kids" component={KidsComponent} />
