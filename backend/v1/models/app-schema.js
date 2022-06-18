@@ -3,7 +3,7 @@ const productSchema = new mongoose.Schema({
     name: String,
     productType: String,
     productCategory: String,
-    productMaterial:String,
+    productMaterial: String,
     productId: Number,
     color: Object,
     description: String,
@@ -11,9 +11,9 @@ const productSchema = new mongoose.Schema({
     isAvailable: Boolean,
     origin: String,
     creationDate: Date,
-    updatedTimeStamp:Date,
+    updatedTimeStamp: Date,
     postalCode: String,
-    price:Number
+    price: Number
 });
 
 const userSchema = new mongoose.Schema({
@@ -28,23 +28,31 @@ const userSchema = new mongoose.Schema({
     adress_distic: String,
     adress_full: String,
     hash: String,
-    userId:Number,
-    shortName:String
+    userId: Number,
+    shortName: String,
+    notification: { notifyOnOrderConfirm: String }
 });
 
 
 const ordersSchema = new mongoose.Schema({
     orderId: Number,
-    orderNumber:String,
+    orderNumber: String,
     shippingAddress: String,
     orderImages: [String],
     msgIds: [],
     orderDate: Date,
     orderStatus: String,
     phoneNumbers: [String],
+    msgPhoneNumbers: [String],
     trackId: String,
-    user:String
-});
+    user: String,
+    msgFrom: String,
+    orderTime:String, 
+
+}, {
+  timestamps: { createdAt: true, updatedAt: true }
+}
+);
 
 
 const twilioMsgSchema = new mongoose.Schema({
@@ -52,7 +60,7 @@ const twilioMsgSchema = new mongoose.Schema({
     messageSid: String,
     msgBody: String,
     msgFrom: String,
-    msgTo:String,
+    msgTo: String,
     mediaUrl: String,
     MediaContentType: String,
     processed: Boolean
@@ -64,8 +72,8 @@ const counterSchema = new mongoose.Schema({
     userSeq: Number,
     twilioMsgSeq: Number,
     orderSeq: Number,
-    AMSeq:Number,
-    VPSeq:Number
+    AMSeq: Number,
+    VPSeq: Number
 });
 
 

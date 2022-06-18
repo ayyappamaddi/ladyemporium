@@ -5,7 +5,7 @@ let channel;
 async function queueOperation() {
     console.log('subscriber - queue operation called for org provisioning');
     try {
-        // channel.assertQueue('order_msg_queue', { durable: true });
+        channel.assertQueue('order_msg_queue', { durable: true });
         // const onMsg = (msg) => {
         //   console.log();
         // };

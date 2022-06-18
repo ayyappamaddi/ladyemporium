@@ -8,6 +8,7 @@ const constants = require('../../constants');
 const rabitmq = require('../../rabitmq');
 const router = express.Router();
 const userModel = require('../models/user');
+const utils = require('../utils')
 
 const routes = {
     async getOrders(req, res) {
@@ -25,7 +26,7 @@ const routes = {
                 query.orderNumber = req.query['orderNumber'];
             }
             if (req.query && req.query['dateRange']) {
-                
+
             }
             logger.info('get Orders for following query', JSON.stringify(query));
             const ordersList = await ordersModel.getOrders(query);
@@ -55,40 +56,28 @@ const routes = {
     async postOrder(req, res) {
         try {
             logger.info("order::route::postOrders");
-            let orderObj = req.body;
-            if(orderObj.shippingAddress.length > 350 ){
-                response.serverError(res);
-                return;
-            }
-            let userInfo = await userModel.getUsersByUserName(orderObj.user, orderObj.userPhone);
-            orderObj.user = userInfo.email;
-            logger.info("order::route::postOrder save products for given srach params", orderObj);
-            const orderInfo = await ordersModel.saveOrder(orderObj);
-            for (let i = 0; i < orderInfo.phoneNumbers.length; i++) {
-                orderMsg = `Your Saree / Dress Been confirmed Order No: ${orderInfo.orderNumber} `;
-                if (orderInfo.postalCode) {
-                    orderMsg += ` Shipping postcode: ${orderInfo.postalCode}`;
+            let ordersArray = req.body;
+            const user = req.userContext.email;
+            const userInfo = userModel.getUsersByUserName(user);
+            // valiate orders
+            for (let i = 0; i < ordersArray.length; i++) {
+                if (ordersArray[i].shippingAddress.length > 350) {
+                    response.serverError(res);
+                    return;
                 }
-
-                if (orderInfo.phoneNumbers && orderInfo.phoneNumbers.length) {
-                    orderMsg += ` With Phone numbers: `;
-                    let separator = '';
-                    orderInfo.phoneNumbers.map(phoneNo => {
-                        ePhoneNo = phoneNo.replace(/^\d{1,5}/, m => m.replace(/\d/g, '*'));
-                        orderMsg += `${ePhoneNo}${separator} `;
-                        separator = ',';
-                    });
-                }
-                orderMsg += 'THIS IS AUTO GENERATED MSG  *** Please donot reply ***';
-
-                const msObj = {
-                    phoneNo: orderInfo.phoneNumbers[i],
-                    msg: orderMsg
-                };
-                var buf = Buffer.from(JSON.stringify(msObj), 'utf8');
-                await rabitmq.publishMsg(buf);
             }
-            response.success(res, orderInfo);
+            let orderIds = [];
+            for (let i = 0; i < ordersArray.length; i++) {
+                ordersArray[i].user = user;
+                logger.info("order::route::postOrder save products for given srach params", ordersArray[i]);
+                const orderInfo = await ordersModel.saveOrder(ordersArray[i]);
+                orderIds.push(orderInfo.orderId);
+                if (userInfo.notification && userInfo.notification.notifyOnOrderConfirm) {
+                    const confirmationMsg = utils.setOrderConfirmationMsg(orderInfo, userInfo);
+                    await utils.publishMsg(confirmationMsg, orderInfo.phoneNumbers);
+                }
+            }
+            response.success(res, { message: "Successfully processed your orders", orderIds });
 
         } catch (err) {
             logger.error("order::route::postOrder something went wrong", err.stack);
@@ -117,21 +106,15 @@ const routes = {
             const orderDetails = await ordersModel.getOrders({ orderNumber, user: req.userContext.email });
             orderInfo = {};
             orderInfo.trackId = req.body.trackId;
+            orderInfo.msgPhoneNumbers = req.body.phoneNumbers || [];
             orderInfo.orderStatus = 'dispatched';
             orderInfo.orderId = orderDetails[0].orderId;
             orderInfo.user = orderDetails[0].user;
             const updatedOrderInfo = await ordersModel.updateOrder(orderInfo);
             logger.info("order::route::updatTrackeOrder");
 
-            for (let i = 0; i < orderDetails[0].phoneNumbers.length; i++) {
-                const msObj = {
-                    phoneNo: orderDetails[0].phoneNumbers[i],
-                    msg: "Your order Been dispatche d, trackId:" + req.body.trackId + " THIS IS AUTO GENERATED MSG *** Please donot reply ***"
-                };
-                logger.info(msObj.phoneNo, '<=====>', msObj.msg);
-                var buf = Buffer.from(JSON.stringify(msObj), 'utf8');
-                await rabitmq.publishMsg(buf);
-            }
+            const dispatchMsg = "Your order Been dispatched, trackId:" + req.body.trackId + " THIS IS AUTO GENERATED MSG *** Please donot reply ***"
+            await utils.publishMsg(dispatchMsg, orderInfo.msgPhoneNumbers);
 
             response.success(res, updatedOrderInfo);
         } catch (err) {

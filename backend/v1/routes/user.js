@@ -42,6 +42,23 @@ const routes = {
             response.serverError(res);
         }
     },
+    async getLogedInUser(req,res){
+        try{
+            logger.info("user::route::getLogedInUser");
+            const context = req.userContext;
+            console.log("context===>",context);
+            const userInfo = {}; // get logged in userDetails
+            if(userInfo){
+                response.success(res, userInfo);
+            }else{
+                logger.info("user::route::getLogedInUser not autherized access this api.");
+                response.unauthorized();
+            }
+        }catch(err){
+            logger.error("user::route::getLogedInUser something went wrong", err.stack);
+            response.serverError(res);
+        }
+    },
     async createNewUser(req, res) {
         try {
             logger.info("user::route::createNewUser");
@@ -78,7 +95,7 @@ const routes = {
 };
 
 router.get('/', catchAsync(routes.getAllUsers));
-router.get('/userInfo', catchAsync(routes.getAllUsers));
+router.get('/userInfo', catchAsync(routes.getLogedInUser));
 router.post('/userLogin', catchAsync(routes.loginUser));
 router.post('/userLogout', catchAsync(routes.logoutUser));
 router.post('/newUesr', catchAsync(routes.createNewUser));

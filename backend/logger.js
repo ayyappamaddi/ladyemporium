@@ -19,7 +19,7 @@ function logLayout() {
         const host = os && os.hostname() ? os.hostname() : '';
         const dateTime = moment(logEvent.startTime).format('YYYY-MM-DD HH:mm:ss');
 
-        let logMessage = `${dateTime} ${host} Berkadia CRUD ${logEvent.pid}  ${logEvent.level.levelStr} `;
+        let logMessage = `${dateTime} ${host} Order Processing ${logEvent.pid}  ${logEvent.level.levelStr} `;
         logMessage = `${logMessage} ${xRequestId} `;
         logMessage = statusCode.toString().trim().length > 0 ? `${logMessage} ${method} ${uri} ${statusCode}` : logMessage;
         logMessage = statusCode.toString().trim().length === 0 ? `${logMessage} ${message}` : logMessage;

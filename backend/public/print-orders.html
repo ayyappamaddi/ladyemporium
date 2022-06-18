@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<script src="./JsBarcode.all.min.js"></script>
+	<script>
+		const pageSize = 2;
+		Number.prototype.pad = function (n) {
+			return new Array(n).join('0').slice((n || 2) * -1) + this;
+		}
+		$(document).ready(function () {
+			const orderIds = getParameterValues('orderIds');
+			getData(orderIds);
+		});
+
+		function getParameterValues(param) {
+			var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+			for (var i = 0; i < url.length; i++) {
+				var urlparam = url[i].split('=');
+				window[urlparam[0]] = urlparam[1];
+				if (urlparam[0] === param) {
+					return urlparam[1];
+				}
+			}
+		}
+		function getData(orderIds) {
+			let apiBasePath;
+			if (window.location.hostname === 'localhost') {
+				apiBasePath = 'http://localhost:3001';
+			} else {
+				apiBasePath = 'https://api.ladyemporium.in';
+			}
+			let accessToken = getParameterValues("accessToken");
+			headers = { Authorization:'Bearer '+ accessToken }
+			const url = apiBasePath + '/v1/orders?orderIds=' + orderIds;
+			$.ajax({ url, headers, success: renderOrders,error:showError });
+		}
+		function showError(err){
+			if(err && err.status === 401){
+				$("#orders_list").append("<div><b> You dont have valid token to take print <br/> Please login again and try</b></div>");
+			}
+		}
+
+		function sortProducts(arr) {
+			return arr.sort(function (a, b) {
+				if (a.orderId < b.orderId) return -1;
+				if (a.orderId > b.orderId) return 1;
+				return 0;
+			});
+		}
+		function renderOrders(data) {
+			try {
+				data = sortProducts(data)
+
+				const orderHtml = prepareShippingAddressHtml(data);
+				// $("#orders_list").append(orderHtml);
+
+				for (let i = 0; i < data.length; i++) {
+					const orderId = data[i].orderNumber || data[i].orderId.pad(5);
+					JsBarcode("#barcode" + i, orderId);
+				}
+				setTimeout(function () {
+					window.print();
+				}, 5000);
+			} catch (err) {
+				console.error('Error occured while render orders ', err);
+				alert('Error occured while  renderOrders \n Please Contact 9663923281');
+			}
+		}
+
+		function prepareShippingAddressHtml(r) {
+			orderHtml = '<div class="page_break">';
+			const pageBreakHtml = '</div ><div class="page_break">';
+			try {
+				for (let i = 0; i < r.length; i++) {
+					if (r[i] && r[i].shippingAddress) {
+						let postalCode = '';
+						r[i].shippingAddress = r[i].shippingAddress.replace(/[^\d][0-9]{6}[^\d]/g, function (match) {
+							match.replace(/[0-9]{6}/g, function (code) {
+								postalCode = code;
+							});
+							return "<b>" + match + "</b>"
+						});
+
+						const addressLines = r[i].shippingAddress.split(/from/i);
+
+						orderHtml += '<div class="order_shipping_address"> <div>';
+
+						for (let j = 0; j < addressLines.length; j++) {
+
+							orderHtml += '<p>' + addressLines[j] + '</p>';
+							if (j + 2 == addressLines.length && addressLines[j]) {
+								orderHtml += '<p><b>From: </b>' + addressLines[1] + '</p>';
+								j++;
+							}
+
+						}
+						if (postalCode) {
+							orderHtml += '<p>Postalcode: <b>' + postalCode + '</b></p>';
+						}
+
+						orderHtml += '</div>';
+						orderHtml += '<div><img class="barcode_img" id="barcode' + i + '"/></div>';
+						if(r[i].orderTime){
+							orderHtml += '<div class="order_time">'+r[i].orderTime+'</div>';
+						}
+						orderHtml +='</div>'; // order div completed.
+						if (i && (i + 1) % pageSize == 0) {
+							orderHtml += '</div> </div>';
+							$("#orders_list").append(orderHtml);
+							orderHtml = '<div class="page_break">';
+						}
+					}
+				}
+
+				if (orderHtml !== '<div class="page_break">') {
+					$("#orders_list").append(orderHtml);
+				}
+
+			} catch (err) {
+				console.error('Error occured while  prepare shipping orders html', err);
+				alert('Error occured while  prepare shipping orders html \n Please Contact 9663923281');
+			}
+
+			// return orderHtml + '</div>';
+		}
+	</script>
+	<style>
+		.order_shipping_content {
+			/* display: flex;
+			width: 100%;
+			flex-wrap: wrap; */
+		}
+
+		.barcode_img {
+			width: 100px;
+			height: 50px;
+		}
+
+		.order_shipping_address {
+			min-height: 350px;
+			border: 2px solid;
+			border-radius: 5px;
+			width: 80%;
+			margin: 50px auto;
+			padding: 10px;
+			font-size: 26px;
+			word-break: break-word;
+		}
+
+
+
+		.page_break {
+			display: flex;
+			width: 100%;
+			flex-wrap: wrap;
+			page-break-after: always;
+		}
+		.order_time{
+			font-size: 8px;
+		}
+	</style>
+</head>
+
+
+<body>
+	<div id="orders_list" class="order_shipping_content">
+	</div>
+</body>
+
+</html>

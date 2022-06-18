@@ -42,7 +42,7 @@ async function createNewUser(context, user) {
 
 async function saveUser(user) {
     try {
-        logger.info('user::model saveUser');
+        logger.info('user::model saveUser :'+JSON.stringify(user));
         const userModel = getModel('user');
         let shortNameInfo = user.name.split(' ');
         user.shortName = shortNameInfo[0][0] + (shortNameInfo.length > 1 ? shortNameInfo[1][0] : shortNameInfo[0][1]);

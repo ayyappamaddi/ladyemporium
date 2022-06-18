@@ -39,6 +39,7 @@ function errorHandler(err, req, res, next){
     res.status(500).send('Something broke!')
 }
 function initializeExpress() {
+    app.use(express.static('public'))
     app.use(middlewares);
     app.use('/v1/', routers.routes);
     app.use(errorHandler);
@@ -56,7 +57,7 @@ async function connect() {
         await mongo.initialiseMongo();
         initializeExpress();
         startHttpServer();
-        rabitmq.subscribeToRabbitmq();
+        // rabitmq.subscribeToRabbitmq();
         globalErrorHandler();
     } catch (err) {
         console.log('error while starting application');

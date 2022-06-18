@@ -1,5 +1,5 @@
 const logger = require('../logger');
-
+const rabitmq = require('../rabitmq');
 var jwt = require('jsonwebtoken');
 
 const secretKey = 'ayyappamaddi1244';
@@ -56,10 +56,39 @@ const getPhoneNumbers = (msg) => {
         throw err;
     }
 }
+const setOrderConfirmationMsg = (orderInfo, userInfo)=>{
+    orderMsg = `Your Saree / Dress Been confirmed Order No: ${orderInfo.orderNumber} `;
+    if (orderInfo.postalCode) {
+        orderMsg += ` Shipping postcode: ${orderInfo.postalCode}`;
+    }
 
+    if (orderInfo.phoneNumbers && orderInfo.phoneNumbers.length) {
+        orderMsg += ` With Phone numbers: `;
+        let separator = '';
+        orderInfo.phoneNumbers.map(phoneNo => {
+            ePhoneNo = phoneNo.replace(/^\d{1,5}/, m => m.replace(/\d/g, '*'));
+            orderMsg += `${ePhoneNo}${separator} `;
+            separator = ',';
+        });
+    }
+    orderMsg += 'THIS IS AUTO GENERATED MSG  *** Please donot reply ***';
+}
+
+const publishMsg = async (orderMsg, phoneNumbers)=>{
+    for (let i = 0; i < phoneNumbers.length; i++) {
+        const msObj = {
+            phoneNo: phoneNumbers[i],
+            msg: orderMsg
+        };
+        var buf = Buffer.from(JSON.stringify(msObj), 'utf8');
+        await rabitmq.publishMsg(buf);
+    }
+}
 module.exports = {
     generateAccessToken,
     verifyAccessToken,
     getPhoneNumbers,
-    getPostalCode
+    getPostalCode,
+    setOrderConfirmationMsg,
+    publishMsg
 }
